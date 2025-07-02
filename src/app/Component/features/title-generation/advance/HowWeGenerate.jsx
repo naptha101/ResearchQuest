@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+"use client"
+import { useState, useEffect } from 'react';
 import { ChevronRight, FileText, Search, Brain, Edit, CheckCircle, Lightbulb, BookOpen, Users, Target, Bookmark } from 'lucide-react';
 
 export default function ResearchPaperGenerator() {
@@ -6,93 +7,92 @@ export default function ResearchPaperGenerator() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [completedSteps, setCompletedSteps] = useState(new Set());
 
- const steps = [
-  {
-    id: 1,
-    title: "Input Research Basics",
-    description: "Provide core research details",
-    icon: FileText, // use any icon like FileText or Edit
-    details: [
-      "Enter subject/domain",
-      "Specify specialization",
-      "Mention relevant keywords"
-    ],
-    color: "from-blue-500 to-sky-500",
-    bgColor: "bg-blue-50",
-    borderColor: "border-blue-200"
-  },
-  {
-    id: 2,
-    title: "Instant Title Suggestion",
-    description: "Get quick titles using AI",
-    icon: Lightbulb, // symbol of fast idea generation
-    details: [
-      "Keyword-mapped title ideas",
-      "Super-fast title generation",
-      "Based on basic inputs only"
-    ],
-    color: "from-yellow-400 to-orange-400",
-    bgColor: "bg-yellow-50",
-    borderColor: "border-yellow-200"
-  },
-  {
-    id: 3,
-    title: "Deep Literature Search",
-    description: "Search thousands of papers smartly",
-    icon: Search,
-    details: [
-      "Similarity-based paper search",
-      "Filter by relevance & recency",
-      "Intelligent paper clustering"
-    ],
-    color: "from-purple-500 to-indigo-500",
-    bgColor: "bg-purple-50",
-    borderColor: "border-purple-200"
-  },
-  {
-    id: 4,
-    title: "Top Paper Selection",
-    description: "Pick 3 most relatable papers",
-    icon: Bookmark,
-    details: [
-      "Ranked by similarity & domain",
-      "Filter based on methodology",
-      "Smart match to your idea"
-    ],
-    color: "from-pink-500 to-rose-500",
-    bgColor: "bg-pink-50",
-    borderColor: "border-pink-200"
-  },
-  {
-    id: 5,
-    title: "Gap & Novelty Analysis",
-    description: "Analyze what's missing and what's new",
-    icon: Brain,
-    details: [
-      "Compare core contributions",
-      "Identify gaps and limitations",
-      "Understand common methodologies"
-    ],
-    color: "from-green-500 to-emerald-500",
-    bgColor: "bg-green-50",
-    borderColor: "border-green-200"
-  },
-  {
-    id: 6,
-    title: "Custom Title Generation",
-    description: "Generate refined research-specific title",
-    icon: Target,
-    details: [
-      "Gap-bridging title suggestions",
-      "Based on selected papers",
-      "Classified and scoped by domain"
-    ],
-    color: "from-cyan-500 to-teal-500",
-    bgColor: "bg-cyan-50",
-    borderColor: "border-cyan-200"
-  }
-];
-
+  const steps = [
+    {
+      id: 1,
+      title: "Input Research Basics",
+      description: "Provide core research details",
+      icon: FileText,
+      details: [
+        "Enter subject/domain",
+        "Specify specialization",
+        "Mention relevant keywords"
+      ],
+      color: "from-orange-400 to-amber-400",
+      bgColor: "bg-orange-50",
+      borderColor: "border-orange-200"
+    },
+    {
+      id: 2,
+      title: "Instant Title Suggestion",
+      description: "Get quick titles using AI",
+      icon: Lightbulb,
+      details: [
+        "Keyword-mapped title ideas",
+        "Super-fast title generation",
+        "Based on basic inputs only"
+      ],
+      color: "from-orange-500 to-amber-500",
+      bgColor: "bg-orange-50",
+      borderColor: "border-orange-200"
+    },
+    {
+      id: 3,
+      title: "Deep Literature Search",
+      description: "Search thousands of papers smartly",
+      icon: Search,
+      details: [
+        "Similarity-based paper search",
+        "Filter by relevance & recency",
+        "Intelligent paper clustering"
+      ],
+      color: "from-orange-400 to-amber-400",
+      bgColor: "bg-orange-50",
+      borderColor: "border-orange-200"
+    },
+    {
+      id: 4,
+      title: "Top Paper Selection",
+      description: "Pick 3 most relatable papers",
+      icon: Bookmark,
+      details: [
+        "Ranked by similarity & domain",
+        "Filter based on methodology",
+        "Smart match to your idea"
+      ],
+      color: "from-orange-500 to-amber-500",
+      bgColor: "bg-orange-50",
+      borderColor: "border-orange-200"
+    },
+    {
+      id: 5,
+      title: "Gap & Novelty Analysis",
+      description: "Analyze what's missing and what's new",
+      icon: Brain,
+      details: [
+        "Compare core contributions",
+        "Identify gaps and limitations",
+        "Understand common methodologies"
+      ],
+      color: "from-orange-400 to-amber-400",
+      bgColor: "bg-orange-50",
+      borderColor: "border-orange-200"
+    },
+    {
+      id: 6,
+      title: "Custom Title Generation",
+      description: "Generate refined research-specific title",
+      icon: Target,
+      details: [
+        "Gap-bridging title suggestions",
+        "Based on selected papers",
+        "Classified and scoped by domain"
+      ],
+      color: "from-orange-500 to-amber-500",
+      bgColor: "bg-orange-50",
+      borderColor: "border-orange-200"
+    }
+  ];
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -113,20 +113,20 @@ export default function ResearchPaperGenerator() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-8">
+    <div className="min-h-screen mt-7 w-full bg-white p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-3 bg-white/70 backdrop-blur-sm rounded-full px-6 py-3 mb-6 shadow-lg border border-white/20">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+          <div className="inline-flex items-center gap-3 bg-white rounded-full px-6 py-3 mb-6 shadow-lg border border-orange-100">
+            <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-amber-500 rounded-full flex items-center justify-center">
               <FileText className="w-4 h-4 text-white" />
             </div>
-            <span className="text-sm font-medium text-slate-700">Research Paper Title Generation</span>
+            <span className="text-sm font-medium text-orange-800">Research Paper Title Generation</span>
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-slate-800 via-blue-800 to-purple-800 bg-clip-text text-transparent mb-4">
-            Academic Excellence
+          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-transparent mb-4">
+            AI Powered Title Generation 
           </h1>
-          <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl text-orange-700/80 max-w-2xl mx-auto leading-relaxed">
             A systematic approach to generating high-quality research papers with synchronized methodology
           </p>
         </div>
@@ -134,17 +134,17 @@ export default function ResearchPaperGenerator() {
         {/* Progress Timeline */}
         <div className="mb-12">
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold text-slate-800">Research Process Timeline</h2>
-            <div className="flex items-center gap-2 text-sm text-slate-600">
-              <div className="w-3 h-3 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full"></div>
+            <h2 className="text-2xl font-bold text-orange-900">Research Process Steps</h2>
+            <div className="flex items-center gap-2 text-sm text-orange-600">
+              <div className="w-3 h-3 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full"></div>
               <span>Auto-progressing</span>
             </div>
           </div>
           
           <div className="relative">
-            <div className="absolute top-6 left-0 w-full h-0.5 bg-slate-200"></div>
+            <div className="absolute top-6 left-0 w-full h-0.5 bg-orange-100"></div>
             <div 
-              className="absolute top-6 left-0 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-1000 ease-out"
+              className="absolute top-6 left-0 h-0.5 bg-gradient-to-r from-orange-400 to-amber-400 transition-all duration-1000 ease-out"
               style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
             ></div>
             
@@ -162,8 +162,8 @@ export default function ResearchPaperGenerator() {
                     ${index === currentStep 
                       ? `bg-gradient-to-r ${step.color} border-white shadow-lg scale-110` 
                       : completedSteps.has(index)
-                        ? 'bg-gradient-to-r from-green-400 to-emerald-500 border-white shadow-md'
-                        : 'bg-white border-slate-300'
+                        ? 'bg-gradient-to-r from-amber-400 to-orange-500 border-white shadow-md'
+                        : 'bg-white border-orange-200'
                     }
                     ${isAnimating && index === currentStep ? 'animate-pulse' : ''}
                     hover:scale-105 cursor-pointer
@@ -173,22 +173,20 @@ export default function ResearchPaperGenerator() {
                     ) : (
                       <step.icon className={`w-6 h-6 ${
                         index === currentStep ? 'text-white' : 
-                        completedSteps.has(index) ? 'text-white' : 'text-slate-400'
+                        completedSteps.has(index) ? 'text-white' : 'text-orange-400'
                       }`} />
                     )}
                   </div>
                   <span className={`mt-2 text-xs font-medium transition-colors duration-300 ${
-                    index <= currentStep ? 'text-slate-700' : 'text-slate-400'
+                    index <= currentStep ? 'text-orange-800' : 'text-orange-400'
                   }`}>
                     Step {step.id}
-                    
                   </span>
                   <br></br>
-                   <span className={`mt-2 text-xs font-medium transition-colors duration-300 ${
-                    index <= currentStep ? 'text-slate-700' : 'text-slate-400'
+                  <span className={`mt-2 text-xs font-medium transition-colors duration-300 ${
+                    index <= currentStep ? 'text-orange-800' : 'text-orange-400'
                   }`}>
                     {step.title}
-                    
                   </span>
                 </button>
               ))}
@@ -205,16 +203,13 @@ export default function ResearchPaperGenerator() {
           `}>
             <div className="flex items-center gap-4 mb-6">
               <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${steps[currentStep].color} flex items-center justify-center shadow-lg`}>
-                <steps className="w-8 h-8 text-white" />
-                {
-                     [currentStep].icon 
-                }
+               
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-slate-800 mb-1">
+                <h3 className="text-2xl font-bold text-orange-900 mb-1">
                   {steps[currentStep].title}
                 </h3>
-                <p className="text-slate-600">
+                <p className="text-orange-700/80">
                   {steps[currentStep].description}
                 </p>
               </div>
@@ -224,18 +219,18 @@ export default function ResearchPaperGenerator() {
               {steps[currentStep].details.map((detail, index) => (
                 <div 
                   key={index}
-                  className="flex items-center gap-3 p-3 bg-white/50 rounded-xl transition-all duration-300 hover:bg-white/70"
+                  className="flex items-center gap-3 p-3 bg-white rounded-xl transition-all duration-300 hover:bg-white/90"
                 >
-                  <ChevronRight className="w-5 h-5 text-slate-400" />
-                  <span className="text-slate-700 font-medium">{detail}</span>
+                  <ChevronRight className="w-5 h-5 text-orange-400" />
+                  <span className="text-orange-800 font-medium">{detail}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Visual Representation */}
-          <div className="p-8 bg-white/70 backdrop-blur-sm rounded-3xl border-2 border-white/30 shadow-lg">
-            <h3 className="text-xl font-bold text-slate-800 mb-6">Process Visualization</h3>
+          <div className="p-8 bg-white rounded-3xl border-2 border-orange-100 shadow-lg">
+            <h3 className="text-xl font-bold text-orange-900 mb-6">Process Visualization</h3>
             <div className="space-y-4">
               {steps.map((step, index) => (
                 <div 
@@ -245,18 +240,18 @@ export default function ResearchPaperGenerator() {
                     ${index === currentStep 
                       ? `bg-gradient-to-r ${step.color} text-white shadow-lg transform scale-105` 
                       : completedSteps.has(index)
-                        ? 'bg-green-100 text-green-800 border border-green-200'
-                        : 'bg-slate-100 text-slate-500'
+                        ? 'bg-amber-50 text-orange-800 border border-amber-200'
+                        : 'bg-orange-50 text-orange-600'
                     }
                   `}
                 >
                   <step.icon className={`w-5 h-5 ${
                     index === currentStep ? 'text-white' : 
-                    completedSteps.has(index) ? 'text-green-600' : 'text-slate-400'
+                    completedSteps.has(index) ? 'text-amber-600' : 'text-orange-400'
                   }`} />
                   <span className="font-medium">{step.title}</span>
                   {completedSteps.has(index) && index !== currentStep && (
-                    <CheckCircle className="w-4 h-4 text-green-600 ml-auto" />
+                    <CheckCircle className="w-4 h-4 text-amber-500 ml-auto" />
                   )}
                 </div>
               ))}
@@ -268,7 +263,7 @@ export default function ResearchPaperGenerator() {
         <div className="text-center">
           <button
             onClick={() => handleStepClick((currentStep + 1) % steps.length)}
-            className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+            className="inline-flex items-center gap-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white px-8 py-4 rounded-2xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
           >
             <span>Next Step</span>
             <ChevronRight className="w-5 h-5" />

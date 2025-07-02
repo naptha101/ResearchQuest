@@ -1,6 +1,6 @@
 "use client";
 import { getLiteraturPosts } from "@/app/Services/Literation-Review";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ResearchShowcase from "./ReseachShowCase";
 
@@ -10,8 +10,7 @@ export default function ResearchSearchForm() {
     specialization: "",
     database: "arxiv",
     keywords: "",
-    api_key: process.env.NEXT_PUBLIC_OPEN_API_KEY,
-    tokensToDebit: 10,
+    tokensToDebit: 1,
     description: "Research Area Identification"
   });
   const [papers, setPapers] = useState(null);
@@ -30,7 +29,8 @@ export default function ResearchSearchForm() {
     setLoading(true);
     try {
       const response = await getLiteraturPosts(formData);
-      setPapers(response);
+      console.log(response)
+      setPapers(response.output.basePapers);
       setLoading(false);
     } catch (err) {
       console.log(err);
@@ -38,6 +38,20 @@ export default function ResearchSearchForm() {
       toast.error("Error searching");
     }
   };
+
+
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    const subject = params.get('subject');
+    const specialization = params.get('specialization');
+    const keywords = params.get('keywords')?.split(',');
+
+ if(subject&&specialization&&keywords)
+    setFormData({...formData,subject:subject,specialization:specialization,keywords:keywords.join(",")})
+  }, []);
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8">

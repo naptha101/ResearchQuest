@@ -1,6 +1,6 @@
 "use client"
-import HowWeGenerate from '@/app/Component/features/title-generation/HowWeGenerate'
-import ResearchSearchForm from '@/app/Component/features/title-generation/ResearchForm'
+import ResearchPaperGenerator from '@/app/Component/features/title-generation/advance/HowWeGenerate'
+import ResearchInputComponent from '@/app/Component/features/title-generation/GenerateTitle'
 import { useAuth } from '@/app/Context/UserAuth'
 import { AuthenticateProfile } from '@/app/Services/Auth'
 import { useRouter } from 'next/navigation'
@@ -55,9 +55,7 @@ const page = () => {
     )
   }
   return (
-    <div className='min-h-screen mx-auto py-3 ' >
-<HowWeGenerate></HowWeGenerate>
-      <ResearchSearchForm></ResearchSearchForm> 
+    <div className='min-h-screen  py-3 ' >
    {showInsufficientTokenPopup && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-xl max-w-md w-full text-center overflow-hidden">
@@ -85,7 +83,8 @@ const page = () => {
             </div>
           </div>
         </div>
-      )}
+      )} 
+      <ResearchInputComponent></ResearchInputComponent>
 
 
     </div>

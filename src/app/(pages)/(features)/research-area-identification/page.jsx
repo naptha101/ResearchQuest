@@ -266,6 +266,8 @@ y+=2
   doc.save("research_analysis_report.pdf");
 };
 
+
+
 // Helper function to map score to visual width
 function mapScoreToWidth(score) {
   return (score / 5) * 50;

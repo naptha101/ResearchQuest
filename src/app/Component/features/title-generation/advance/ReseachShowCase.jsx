@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiExternalLink, FiDownload, FiChevronDown, FiChevronUp, FiSearch, FiX } from 'react-icons/fi';
+import { useTitle } from '@/app/Context/TitleContext';
+import { useRouter } from 'next/navigation';
+import AdvanceAnalysis from './analysis/AdvanceAnalysis';
 
 const ResearchShowcase = ({ data }) => {
   const [activePaper, setActivePaper] = useState(null);
@@ -8,7 +11,9 @@ const ResearchShowcase = ({ data }) => {
   const [sortConfig, setSortConfig] = useState({ key: 'recency_score', direction: 'asc' });
   const [expandedKeywords, setExpandedKeywords] = useState(false);
   const [selectedPapers, setSelectedPapers] = useState([]);
-
+  
+  const {setPapers}=useTitle()
+  const router=useRouter()
   const togglePaper = (id) => {
     setActivePaper(activePaper === id ? null : id);
   };
@@ -69,6 +74,11 @@ const ResearchShowcase = ({ data }) => {
       return prev;
     });
   };
+  const handleNext=()=>{
+    if (selectedPapers.length === 0) return;
+    
+    router.push('/title-generation/advance/#advance')
+  }
 
   // Scroll to selected paper
   const scrollToPaper = (index) => {
@@ -111,6 +121,9 @@ const ResearchShowcase = ({ data }) => {
           </ul>
           {selectedPapers.length === 3 && (
             <p className="text-xs text-gray-500 mt-2 italic">Maximum 3 papers selected</p>
+          )}
+           {selectedPapers.length >0 && (
+            <a  href='#advance' className="text-xs text-white bg-blue-500 p-2 mt-2 italic">Next</a>
           )}
         </div>
       )}
@@ -304,6 +317,14 @@ const ResearchShowcase = ({ data }) => {
           <p className="mt-1">Data retrieved from {data.databases_used}</p>
         </div>
       </div>
+
+{
+selectedPapers.length>0&&
+<div  id="advance">
+<AdvanceAnalysis papers={selectedPapers}  ></AdvanceAnalysis>
+</div>
+}
+
     </div>
   );
 };
