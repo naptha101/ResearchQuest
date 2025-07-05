@@ -1,5 +1,5 @@
 "use client";
-import { getLiteraturPosts } from "@/app/Services/Literation-Review";
+import { getLiteraturPosts, getPreviousResearch } from "@/app/Services/Literation-Review";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ResearchShowcase from "./ReseachShowCase";
@@ -30,6 +30,10 @@ export default function ResearchSearchForm() {
     try {
       const response = await getLiteraturPosts(formData);
       console.log(response)
+        const params = new URLSearchParams(window.location.search);
+  params.set('id', response._id); // Set or update
+  const newUrl = `${window.location.pathname}?${params.toString()}`;
+  window.history.pushState({}, '', newUrl);
       setPapers(response.output.basePapers);
       setLoading(false);
     } catch (err) {
@@ -39,7 +43,20 @@ export default function ResearchSearchForm() {
     }
   };
 
+const handleHistory=async(id)=>{
+  try{
 
+    const response = await getPreviousResearch(id);
+  console.log(response)
+  if(response.data.output){
+    setPapers(response.data.output.basePapers);
+  }
+  }
+  catch(err){
+    console.log(err)
+    toast.error("Error fetching old Research History.")
+  }
+}
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -47,9 +64,12 @@ export default function ResearchSearchForm() {
     const subject = params.get('subject');
     const specialization = params.get('specialization');
     const keywords = params.get('keywords')?.split(',');
-
+    const id=params.get("id")
  if(subject&&specialization&&keywords)
     setFormData({...formData,subject:subject,specialization:specialization,keywords:keywords.join(",")})
+  if(id){
+  handleHistory(id)
+  }
   }, []);
 
 
@@ -61,7 +81,7 @@ export default function ResearchSearchForm() {
           <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-indigo-800 bg-clip-text text-transparent mb-4">
             Discover Research Like Never Before
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-brand max-w-2xl mx-auto">
             The most advanced research platform powered by AI - bringing the world's knowledge to your fingertips
           </p>
         </div>

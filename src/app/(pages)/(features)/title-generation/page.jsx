@@ -3,6 +3,7 @@ import ResearchPaperGenerator from '@/app/Component/features/title-generation/ad
 import ResearchInputComponent from '@/app/Component/features/title-generation/GenerateTitle'
 import { useAuth } from '@/app/Context/UserAuth'
 import { AuthenticateProfile } from '@/app/Services/Auth'
+import { getPreviousResearch } from '@/app/Services/Literation-Review'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
@@ -15,7 +16,7 @@ const page = () => {
     const checkUserAccess = async () => {
       try {
         const res = await AuthenticateProfile()
-        console.log(res)
+    //    console.log(res)
         
         if (!res.data) {
           router.push('/auth/login')
@@ -34,7 +35,19 @@ const page = () => {
         setLoading(false)
       }
     }
+    const checkHistory=async()=>{
+      try{
+        const res=await getPreviousResearch();
+     //   console.group(res)
+      }
 
+      catch(err){
+        console.log(err)
+
+      }
+    }
+
+checkHistory()
     checkUserAccess()
   }, [])
 

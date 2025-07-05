@@ -1,20 +1,7 @@
 import axios from "axios";
 
 
-export const getLiteraturPosts = async (data) =>{
-    try{
-        console.log(data)
 
-        const response=await axios.post(process.env.NEXT_PUBLIC_API+'researchquest/research-title-generation',data,{
-            withCredentials:true
-        })
-        return response.data.data.data;
-    }
-    catch(err){
-        console.log(err);
-        return err.message;
-    }
-}
 export const getTitle=async (data)=>
     {
         try{
@@ -29,6 +16,20 @@ export const getTitle=async (data)=>
         }
 
     }
+    export const getLiteraturPosts = async (data) =>{
+    try{
+        console.log(data)
+
+        const response=await axios.post(process.env.NEXT_PUBLIC_API+'researchquest/research-title-generation',data,{
+            withCredentials:true
+        })
+        return response.data.data.data;
+    }
+    catch(err){
+        console.log(err);
+        return err.message;
+    }
+}
 
 export const paperReviewAnalysis=async(data)=>{
 try{
@@ -55,3 +56,16 @@ catch(err){
     return err.message;
     }
 }
+export const getPreviousResearch=async(id)=>{
+    try{
+        const response=await axios.get(process.env.NEXT_PUBLIC_API+"researchquest/research-title-generation/"+id,{
+            withCredentials:true
+        })
+     //console.log(response)
+        return response.data
+    }
+catch(err){
+console.log(err)
+return err.message
+}
+    }

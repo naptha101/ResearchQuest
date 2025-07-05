@@ -188,7 +188,7 @@ setResearchData(res)
         <button
           onClick={handleTitleGeneration}
           disabled={isGenerating}
-          className="flex-1 px-6 py-4 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all duration-300 flex items-center justify-center gap-3 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed group"
+          className="flex-1 px-6 py-4 bg-gradient-to-r from-amber-100 to-amber-100 text-orange-800 hover:text-white rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all duration-300 flex items-center justify-center gap-3 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed group"
         >
           <Sparkles className={`w-5 h-5 ${isGenerating ? 'animate-spin' : 'group-hover:rotate-12'} transition-transform duration-300`} />
           <span className="font-semibold">
@@ -198,7 +198,7 @@ setResearchData(res)
         <button
           onClick={handleAdvancedSearch}
           disabled={isSearching}
-          className="flex-1 px-6 py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-xl hover:from-orange-600 hover:to-red-600 transition-all duration-300 flex items-center justify-center gap-3 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed group"
+          className="flex-1 px-6 py-4 bg-gradient-to-r from-amber-100 to-amber-100 text-orange-800 hover:text-white rounded-xl hover:from-amber-600 hover:to-amber-700 transition-all duration-300 flex items-center justify-center gap-3 hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed group"
         >
           <Search className={`w-5 h-5 ${isSearching ? 'animate-pulse' : 'group-hover:scale-110'} transition-transform duration-300`} />
           <span className="font-semibold">

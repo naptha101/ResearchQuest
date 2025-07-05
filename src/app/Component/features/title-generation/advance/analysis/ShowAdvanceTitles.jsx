@@ -10,9 +10,9 @@ const ResearchTitlesDisplay = ({ data }) => {
         <p className="text-sm text-gray-700">
           <strong>Time Taken:</strong> {parseFloat(time_taken).toFixed(2)} sec
         </p>
-        <p className="text-sm text-gray-700 mt-1">
+        {/* <p className="text-sm text-gray-700 mt-1">
           <strong>Token Usage:</strong> Input: {token_usage.input_tokens} tokens (${token_usage.input_cost}), Output: {token_usage.output_tokens} tokens (${token_usage.output_cost}), Total: {token_usage.total_cost}
-        </p>
+        </p> */}
       </div>
 
       {/* Paper List */}

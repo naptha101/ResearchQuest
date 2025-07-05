@@ -133,7 +133,7 @@ const ResearchShowcase = ({ data }) => {
         <div className="mb-8 text-center">
           <h1 className="text-4xl font-bold text-indigo-900 mb-2">Research Paper Explorer</h1>
           <p className="text-lg text-indigo-700">
-            Exploring {data.papers.length} papers from {data.databases_used}
+            Exploring {data.papers.length} papers 
           </p>
         </div>
 
@@ -312,10 +312,10 @@ const ResearchShowcase = ({ data }) => {
         </div>
 
         {/* Footer */}
-        <div className="mt-12 pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
+        {/* <div className="mt-12 pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
           <p>Search cost: {data.token_usage.total_cost} ({data.token_usage.input_tokens} input, {data.token_usage.output_tokens} output tokens)</p>
           <p className="mt-1">Data retrieved from {data.databases_used}</p>
-        </div>
+        </div> */}
       </div>
 
 {

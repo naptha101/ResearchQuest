@@ -25,7 +25,7 @@ const Features = () => {
       bgColor: "bg-purple-50",
       borderColor: "border-purple-300",
       stats: "1000+ Titles",
-      url: '/research-area-identification'
+      url: '/title-generation'
     },
     {
       title: "AI Literature Review Builder",

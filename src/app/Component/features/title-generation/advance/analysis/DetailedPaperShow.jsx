@@ -11,6 +11,8 @@ const DetailedPaperShow = ({ papers }) => {
     const [loading,setLoading]=useState(false);
  
     const handleGenereateTitles=async ()=>{
+            setLoading(true)
+
         try{
              const params = new URLSearchParams(window.location.search);
     const specialization = params.get('specialization');
@@ -27,11 +29,17 @@ const DetailedPaperShow = ({ papers }) => {
       console.log(response)
  setData(response.data)
     toast.success('Advance Titles Generated Successfully');
+    setLoading(false)
+  }
+  else{
+    toast.error('Failed to Generate Advance Titles');
+    setLoading(false)
   }       
-        }
+}     
         catch(err){
      console.log(err)
      toast.error("  Error generating titles ")
+     setLoading(false)
         }
     }
   return (
@@ -91,8 +99,21 @@ const DetailedPaperShow = ({ papers }) => {
   Generate Advance Titles
 
       </button>{
-        data&&
+
+        !loading&&data&&
       <ResearchTitlesDisplay data={data}></ResearchTitlesDisplay>}
+      {loading && (
+          <div className="mt-16 flex flex-col items-center justify-center">
+            <div className="relative w-24 h-24 mb-6">
+              <div className="absolute inset-0 rounded-full border-4 border-blue-500 border-t-transparent animate-spin"></div>
+              <div className="absolute inset-4 rounded-full border-4 border-orange-500 border-t-transparent animate-spin animation-delay-200"></div>
+            </div>
+            <h3 className="text-xl font-semibold text-gray-800 mb-2">Gathering Research</h3>
+            <p className="text-gray-600 max-w-md text-center">
+              Our AI is scanning thousands of papers to find the most relevant research for you...
+            </p>
+          </div>
+        )}
     </div>
   );
 };
