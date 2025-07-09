@@ -1,20 +1,27 @@
-import { paperReviewAnalysis } from '@/app/Services/Literation-Review';
+import { getPreviousResearch, paperReviewAnalysis } from '@/app/Services/Literation-Review';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import DetailedPaperShow from './DetailedPaperShow';
 import { Loader2 } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
+import axios from 'axios';
 
-const AdvanceAnalysis = ({ papers }) => {
+const AdvanceAnalysis = ({ papers,keyword }) => {
 
   const [researchPapers,setReseachPapers]=useState(null)
   const [loading,setLoading]=useState(false)
+  const params=useSearchParams();
+
   const HandlePaperAnalysis = async () => {
     try {
       setLoading(true)
-      const response = await paperReviewAnalysis(papers);
-      console.log(response)
-      if(response.papers){
-        setReseachPapers(response.papers)
+
+ const id=params.get("id")
+
+      const response = await paperReviewAnalysis(papers,id);
+   //   console.log(response)
+      if(response.output.papers){
+        setReseachPapers(response.output.papers)
       setLoading(false)
       }else{
         toast.error("No papers found")
@@ -26,6 +33,27 @@ const AdvanceAnalysis = ({ papers }) => {
       setLoading(false);
     }
   };
+  const handlePaperHistory=async()=>{
+    try{
+      const id=params.get("id");
+if(id){
+      const response =await getPreviousResearch(id)
+ if(response.data.level2.output.papers)   {
+setReseachPapers(response.data.level2.output.papers)
+ }
+ 
+    }
+
+    }
+    catch(err){
+      toast.error("Can't fetch your previous Papers.")
+    }
+  }
+  useEffect(()=>{
+handlePaperHistory()
+  },[])
+
+
 
 
   return (
@@ -78,7 +106,7 @@ const AdvanceAnalysis = ({ papers }) => {
         Paper Review Analysis
       </button>
 
-      {researchPapers&&!loading&&<DetailedPaperShow papers={researchPapers}>
+      {researchPapers&&!loading&&<DetailedPaperShow papers={researchPapers} keywords={keyword}>
 
       </DetailedPaperShow>}
      {loading && (

@@ -16,9 +16,9 @@ export const getTitle=async (data)=>
         }
 
     }
-    export const getLiteraturPosts = async (data) =>{
+ export const getLiteraturPosts = async (data) =>{
     try{
-        console.log(data)
+       // console.log(data)
 
         const response=await axios.post(process.env.NEXT_PUBLIC_API+'researchquest/research-title-generation',data,{
             withCredentials:true
@@ -30,11 +30,31 @@ export const getTitle=async (data)=>
         return err.message;
     }
 }
+export const getSimpleLiteraturePosts=async (data)=>{
+    try{
+        const response=await axios.post(process.env.NEXT_PUBLIC_OPEN_ANU+'phase1/papersapi/basepapers_simple_search',data)
+    
+        return response.data;
+    
+    }
+    catch(err){
+        console.log(err);
+        return err.message;
+    }
+}
 
-export const paperReviewAnalysis=async(data)=>{
+export const paperReviewAnalysis=async(data,id)=>{
 try{
-const response=await axios.post(process.env.NEXT_PUBLIC_OPEN_ANU+"phase1/titlesapi/LR_of_papers_by_papertitle",{papers:data,api_key:process.env.NEXT_PUBLIC_OPEN_API_KEY})
-return response.data
+   console.log({papers:data,  tokensToDebit:1,
+    description:"Research Title Generation TEST",
+  id:id
+})
+const response=await axios.post(process.env.NEXT_PUBLIC_API+"researchquest/research-title-generation2",{papers:data,  tokensToDebit:1,
+    description:"Research Title Generation TEST",
+  id:id
+},{withCredentials:true})
+console.log(response)
+return response.data.data
 
 }
 catch(err){
@@ -46,14 +66,29 @@ catch(err){
 }
 export const generateAdvanceTitles=async(data)=>{
 try{
-        const response=await axios.post(process.env.NEXT_PUBLIC_OPEN_ANU+"phase1/titlesapi/proposals_of_titles",data)
-        
+    console.log(data)
+        const response=await axios.post(process.env.NEXT_PUBLIC_API+"researchquest/research-title-generation3",data,{
+            withCredentials:true
+        })
+   //  console.log(data)   
         return response
     
 }
 catch(err){
     console.log(err);
     return err.message;
+    }
+}
+export const generateSimpleTitles=async(data)=>{
+    try{
+        const response=await axios.post(process.env.NEXT_PUBLIC_OPEN_ANU+"phase1/titlesapi/proposals_of_titles_simple_search",data)
+//  console.log(response)
+        return response.data
+
+    }
+    catch(err){
+        console.log(err);
+        return err.message;
     }
 }
 export const getPreviousResearch=async(id)=>{
@@ -69,3 +104,4 @@ console.log(err)
 return err.message
 }
     }
+

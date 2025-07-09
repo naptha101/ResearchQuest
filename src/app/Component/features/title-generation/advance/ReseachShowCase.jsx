@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiExternalLink, FiDownload, FiChevronDown, FiChevronUp, FiSearch, FiX } from 'react-icons/fi';
 import { useTitle } from '@/app/Context/TitleContext';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import AdvanceAnalysis from './analysis/AdvanceAnalysis';
+import { ArrowBigDown, ArrowBigLeft, ArrowBigRight } from 'lucide-react';
+import { getPreviousResearch } from '@/app/Services/Literation-Review';
 
-const ResearchShowcase = ({ data }) => {
+const ResearchShowcase = ({ data,setData,isAdvanced }) => {
   const [activePaper, setActivePaper] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: 'recency_score', direction: 'asc' });
@@ -22,6 +24,31 @@ const ResearchShowcase = ({ data }) => {
     setSearchTerm(e.target.value);
   };
 
+  const handleHistory=async(id)=>{
+    try{
+  
+      const response = await getPreviousResearch(id);
+    //console.log(response)
+    if(response.data.level2.input.papers){
+  //     response.data.level2.input.papers.map((ppr)=>{
+    
+  // setSelectedPapers(response.data.level2.input.papers)
+
+  //   })
+   setSelectedPapers(response.data.level2.input.papers)
+  }
+    }
+    catch(err){
+      console.log(err)
+      toast.error("Error fetching old Research History.")
+    }
+  }
+
+const params=useSearchParams();
+  useEffect(()=>{
+    const id=params.get("id");
+if(id)handleHistory(id)
+  },[])
   const requestSort = (key) => {
     let direction = 'asc';
     if (sortConfig.key === key && sortConfig.direction === 'asc') {
@@ -92,14 +119,15 @@ const ResearchShowcase = ({ data }) => {
   const isPaperSelected = (index) => {
     return selectedPapers.some(p => p.index === index);
   };
+const [openSelected,setSelected]=useState(true);
 
   return (
     <div className="min-h-screen mt-3 rounded-xl bg-gradient-to-br from-indigo-50 to-blue-50 p-6 relative">
       {/* Floating selected papers container */}
       {selectedPapers.length > 0 && (
-        <div className="fixed right-6 top-1/2 transform -translate-y-1/2 w-64 bg-white rounded-xl shadow-lg p-4 z-10 max-h-[70vh] overflow-y-auto">
-          <h3 className="font-semibold text-indigo-800 mb-3 border-b pb-2">
-            Selected Papers ({selectedPapers.length}/3)
+        <div className={"fixed  top-1/2 transform -translate-y-1/2 w-64 bg-white rounded-xl shadow-lg p-4 z-10 max-h-[70vh] overflow-y-auto"+(openSelected?" right-6":" -right-50")}>
+          <h3 className="font-semibold  text-indigo-800 mb-3 border-b pb-2">
+             <span className='cursor-pointer'>{!openSelected?<ArrowBigLeft onClick={()=>{setSelected(!openSelected)}} height={40} width={40}></ArrowBigLeft>:<ArrowBigRight onClick={()=>{setSelected(!openSelected)}} height={40} width={40}></ArrowBigRight>}</span>   Selected Papers ({selectedPapers.length}/3)
           </h3>
           <ul className="space-y-2">
             {selectedPapers.map((paper) => (
@@ -321,7 +349,8 @@ const ResearchShowcase = ({ data }) => {
 {
 selectedPapers.length>0&&
 <div  id="advance">
-<AdvanceAnalysis papers={selectedPapers}  ></AdvanceAnalysis>
+{isAdvanced&&<AdvanceAnalysis papers={selectedPapers} keyword={null}  ></AdvanceAnalysis>}
+{!isAdvanced&&<AdvanceAnalysis papers={selectedPapers} keyword={visibleKeywords}></AdvanceAnalysis>}
 </div>
 }
 

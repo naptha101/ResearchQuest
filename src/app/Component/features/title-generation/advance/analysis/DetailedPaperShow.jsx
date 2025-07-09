@@ -1,11 +1,12 @@
 "use client"
 
-import { generateAdvanceTitles } from '@/app/Services/Literation-Review';
-import React, { useState } from 'react';
+import { generateAdvanceTitles, generateSimpleTitles, getPreviousResearch } from '@/app/Services/Literation-Review';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import ResearchTitlesDisplay from './ShowAdvanceTitles';
+import { useSearchParams } from 'next/navigation';
 
-const DetailedPaperShow = ({ papers }) => {
+const DetailedPaperShow = ({ papers,keywords }) => {
 
     const [data,setData]=useState(null)
     const [loading,setLoading]=useState(false);
@@ -15,19 +16,22 @@ const DetailedPaperShow = ({ papers }) => {
 
         try{
              const params = new URLSearchParams(window.location.search);
+             const id=params.get("id")
     const specialization = params.get('specialization');
     const keywords = params.get('keywords')?.split(',');
          const data={
             papers:papers,
             specialization: specialization,
     keywords:keywords,
-        api_key: process.env.NEXT_PUBLIC_OPEN_API_KEY
+          tokensToDebit:1,
+    description:"Research Title Generation TEST",
+    id:id
          }
 //console.log(data)
   const response=await generateAdvanceTitles(data);
-  if(response){
-      console.log(response)
- setData(response.data)
+  if(response.data.data){
+     // console.log(response)
+ setData(response.data.data.output)
     toast.success('Advance Titles Generated Successfully');
     setLoading(false)
   }
@@ -42,6 +46,56 @@ const DetailedPaperShow = ({ papers }) => {
      setLoading(false)
         }
     }
+    const handleSimpleTitle=async()=>{
+      setLoading(true)
+        try{
+            const params = new URLSearchParams(window.location.search);
+    const subject = params.get('subject');
+
+          const response=await generateSimpleTitles({papers:papers,subject:subject,keywords:keywords,api_key:process.env.NEXT_PUBLIC_OPEN_API_KEY})
+      // console.log(response)
+          if(response){
+      //console.log(response)
+ setData(response)
+    toast.success('Simple Search Titles Generated Successfully');
+    setLoading(false)
+  }
+  else{
+    toast.error('Failed to Generate Advance Titles');
+    setLoading(false)
+  }       
+        }
+        catch(err){
+          console.log(err)
+          toast.error("Error Generating Simple Titles.")
+          setLoading(false)
+        }
+    }
+    const handleHistory=async(id)=>{
+      try{
+    
+        const response = await getPreviousResearch(id);
+      console.log(response)
+      if(response.data.level3.output.titles){
+   
+     setData({titles:response.data.level3.output.titles})
+    }
+      }
+      catch(err){
+        console.log(err)
+        toast.error("Error fetching old Research History.")
+      }
+    }
+  const params=useSearchParams()
+  useEffect(()=>{
+const id=params.get('id')
+if(id)
+handleHistory(id)
+
+  },[])
+
+
+
   return (
     <div className="py-10 px-4 max-w-6xl mx-auto space-y-8">
       <h2 className="text-3xl font-bold text-gray-800 border-b-2 border-amber-500 pb-2">
@@ -95,7 +149,7 @@ const DetailedPaperShow = ({ papers }) => {
 
 
 
-      <button onClick={()=>{handleGenereateTitles()}} className='w-[30vw] my-3 cursor-pointer shadow-2xl hover:scale-105 text-white py-4 text-2xl bg-gradient-to-r from-amber-400 rounded-2xl to-orange-400'>
+      <button onClick={()=>{!keywords?handleGenereateTitles():handleSimpleTitle()}} className='w-[30vw] my-3 cursor-pointer shadow-2xl hover:scale-105 text-white py-4 text-2xl bg-gradient-to-r from-amber-400 rounded-2xl to-orange-400'>
   Generate Advance Titles
 
       </button>{
