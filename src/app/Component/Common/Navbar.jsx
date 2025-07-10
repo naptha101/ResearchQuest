@@ -15,7 +15,7 @@ export default function Navbar() {
   useEffect(()=>{
   const checkAuth=async()=>{
        const res= await AuthenticateProfile()
-       console.log(res)
+       //console.log(res)
        if(res.data)setUser(res.data)
         }
 checkAuth()
