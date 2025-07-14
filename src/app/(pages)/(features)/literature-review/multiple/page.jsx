@@ -81,35 +81,40 @@ const handleProceed = async () => {
   setIsProcessing(true);
 
   try {
-    const formData = new FormData();
-
+    
+ let response=null;
     // Append each selected file (if multiple)
     for (let i = 0; i < selectedFiles.length; i++) {
-      formData.append("file", selectedFiles[i]);
-          formData.append("s3_file_name", selectedFiles[i].fileName);
-          console.log(selectedFiles)
-
-    }
-
+        const formData = new FormData();
+        console.log(selectedFiles[i])
+    formData.append("file", selectedFiles[i]);
+    formData.append("s3_file_name", selectedFiles[i].name);
     formData.append("user_id", user._id);
     formData.append("bucket_name", process.env.NEXT_PUBLIC_BUCKET);
     formData.append("aws_access_key_id", process.env.NEXT_PUBLIC_AWS_ID);
     formData.append("aws_secret_access_key", process.env.NEXT_PUBLIC_ACCESS_KEY);
 
-    const response = await uploadFile(formData);
+     response = await uploadFile(formData);
+}
 
     if(response.s3_url){
-        toast.success("Your paper uploaded succesfully");
-            const params = new URLSearchParams();
-
+    toast.success("Your paper uploaded succesfully");
+    const params = new URLSearchParams();
     params.set('paper', response.s3_url);
-   
+    
+    let names=selectedFiles[0].name;
+    for (let i = 1; i < selectedFiles.length; i++) {
+  //  console.log(selectedFiles[i].name)
+  names+=(","+selectedFiles[i].name)
+    }
+    
+     params.set('names',names)
     const newUrl = `${window.location.pathname}/review?${params.toString()}`;
     router.push(newUrl)
     }else{
         toast.error("Error occured while uploading File")
     }
-    console.log(response);
+
   } catch (err) {
     console.error("Upload failed:", err);
   }

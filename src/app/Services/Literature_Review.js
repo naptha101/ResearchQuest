@@ -53,7 +53,7 @@ export const generateContext=async(data)=>{
     }
 }
 export const generateCitation=async(data)=>{
-    console.log(data)
+   // console.log(data)
     try{
  const response=await axios.post(process.env.NEXT_PUBLIC_OPEN_ANU+"phase2/citation/pdf_details",{
     pdf: data,
@@ -68,7 +68,7 @@ export const generateCitation=async(data)=>{
     openapikey: process.env.NEXT_PUBLIC_OPEN_API_KEY
  })
 //console.log(finalResponse)
- return finalResponse.data;
+ return {...finalResponse.data,authors:response.data.results.uploaded_pdf_authors};
 }
 else{
     return "Error Generating Citation"
@@ -84,7 +84,7 @@ export const finalReview=async(data)=>{
     try{
        // console.log(data)
 const response=await axios.post(process.env.NEXT_PUBLIC_OPEN_ANU+"phase2/reviews/LRgeneration/lr_json",data);
-console.log(response.data)
+//console.log(response.data)
 return response.data  
 
 return 
@@ -92,5 +92,29 @@ return
     catch(err){
         console.log(err);
         return err.message
+    }
+}
+export const summarizeReview=async(data)=>{
+    try{
+const response=await axios.post(process.env.NEXT_PUBLIC_OPEN_API+"literature_review_additional/generate_summarized_lr",data)
+console.log(response)
+return response.data
+    }
+    catch(err){
+        console.log(err);
+return err.message
+    }
+}
+
+export const consolidatedReport=async(data)=>{
+    try{
+        //console.log(data)
+ const response=await axios.post(process.env.NEXT_PUBLIC_OPEN_ANU+"phase2/reviews/LRgeneration/consolidated_lr",{combinedLR:data,openapikey:process.env.NEXT_PUBLIC_OPEN_API_KEY})
+//console.log(response)
+return response.data
+    }
+    catch(err){
+console.log(err);
+return err.message
     }
 }

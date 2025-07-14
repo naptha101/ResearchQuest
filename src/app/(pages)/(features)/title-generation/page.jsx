@@ -1,5 +1,4 @@
 "use client"
-import ResearchPaperGenerator from '@/app/Component/features/title-generation/advance/HowWeGenerate'
 import ResearchInputComponent from '@/app/Component/features/title-generation/GenerateTitle'
 import { useAuth } from '@/app/Context/UserAuth'
 import { AuthenticateProfile } from '@/app/Services/Auth'
