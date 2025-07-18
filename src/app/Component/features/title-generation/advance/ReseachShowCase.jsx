@@ -14,7 +14,6 @@ const ResearchShowcase = ({ data,setData,isAdvanced }) => {
   const [expandedKeywords, setExpandedKeywords] = useState(false);
   const [selectedPapers, setSelectedPapers] = useState([]);
   
-  const {setPapers}=useTitle()
   const router=useRouter()
   const togglePaper = (id) => {
     setActivePaper(activePaper === id ? null : id);

@@ -10,47 +10,48 @@ import { toast } from 'react-toastify';
 export default function Page() {
   const [hoveredCard, setHoveredCard] = useState(null);
 
-  const sections = [
-    {
-      title: "URL Research Papers",
-      iconBg: "from-orange-400 to-amber-500",
-      heading: "User Input Link for Research papers",
-      subtext: "Enter UR of paper and get your Citation generated",
-      icon: FileText,
-      gradient: "from-orange-50 to-amber-50",
-      borderGradient: "from-orange-200 to-amber-200",
-      type:"url",
-      hoverGradient: "from-orange-100 to-amber-100",
-      accentColor: "text-orange-600",
-      features: [ "Quick Generation", "Summarized Review"]
-    },
-    {
-      title: "PDFs Research papers",
-      iconBg: "from-blue-500 to-[#1c7ea8]",
-      heading: "Comprehensive Analysis",
-      subtext: "Create extensive literature reviews from multiple sources with deep analytical insights",
-      icon: BookOpen,
-            type:"pdf",
-      gradient: "from-purple-50 to-blue-50",
-      borderGradient: "from-blue-200 to-[#1c7ea8]",
-      hoverGradient: "from-violet-100 to-[#1c7ea8]",
-      accentColor: "text-[#1c7ea8]",
-      features: ["Multi-paper analysis", "Deep insights", "Consolidated Analysis"]
-    },
-     {
-      title: "Internet Article URLs",
-      iconBg: "from-blue-500 to-[#1c7ea8]",
-      heading: "URL Articles Papers",
-      subtext: "Generate Citation for Articles from the web",
-      icon: PenTool,
-            type:"article",
-      gradient: "from-purple-50 to-blue-50",
-      borderGradient: "from-blue-200 to-[#1c7ea8]",
-      hoverGradient: "from-violet-100 to-[#1c7ea8]",
-      accentColor: "text-[#1c7ea8]",
-      features: ["Multi-paper analysis", "Deep insights", "Consolidated Analysis"]
-    }
-  ];
+const sections = [
+  {
+    title: "URL-Based Research Papers",
+    iconBg: "from-orange-400 to-amber-500",
+    heading: "Cite Research from Online URLs",
+    subtext: "Paste the URL of any research paper and instantly generate accurate citations.",
+    icon: FileText,
+    gradient: "from-orange-50 to-amber-50",
+    borderGradient: "from-orange-200 to-amber-200",
+    hoverGradient: "from-orange-100 to-amber-100",
+    accentColor: "text-orange-600",
+    type: "url",
+    features: ["One-click Citation", "Brief Paper Summary"]
+  },
+  {
+    title: "PDF-Based Research Papers",
+    iconBg: "from-blue-500 to-[#1c7ea8]",
+    heading: "In-Depth Literature Review from PDFs",
+    subtext: "Upload multiple PDF papers for detailed analysis and structured insights.",
+    icon: BookOpen,
+    gradient: "from-purple-50 to-blue-50",
+    borderGradient: "from-blue-200 to-[#1c7ea8]",
+    hoverGradient: "from-violet-100 to-[#1c7ea8]",
+    accentColor: "text-[#1c7ea8]",
+    type: "pdf",
+    features: ["Batch PDF Processing", "Key Insight Extraction", "Unified Summary Report"]
+  },
+  {
+    title: "Web Article Citations",
+    iconBg: "from-blue-500 to-[#1c7ea8]",
+    heading: "Cite Web-Based Articles with Ease",
+    subtext: "Generate accurate citations for internet articles and blog posts instantly.",
+    icon: PenTool,
+    gradient: "from-purple-50 to-blue-50",
+    borderGradient: "from-blue-200 to-[#1c7ea8]",
+    hoverGradient: "from-violet-100 to-[#1c7ea8]",
+    accentColor: "text-[#1c7ea8]",
+    type: "article",
+    features: ["Web Article Parsing", "Accurate Source Citation", "Quick Overview Generation"]
+  }
+];
+
     const { user, setUser } = useAuth()
     const router = useRouter()
   
@@ -138,7 +139,7 @@ export default function Page() {
             <span className=" text-[#1c7ea8] font-semibold text-sm">AI-Powered Citation Generation</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-slate-800 via-blue-700 to-text-[#1c7ea8] bg-clip-text text-transparent mb-4">
-            Research Made Simple
+            Citation Made Simple
           </h1>
           <p className="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
             Transform your research workflow with intelligent literature review generation powered by cutting-edge AI
