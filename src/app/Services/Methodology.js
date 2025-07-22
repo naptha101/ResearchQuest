@@ -2,6 +2,7 @@ import axios from "axios";
 
 export const deepSearch=async(data)=>{
 try{
+console.log(data)
 const response=await axios.post(process.env.NEXT_PUBLIC_OPEN_ANU+"phase1/papersapi/basepapers",data)
 return response.data
 

@@ -4,8 +4,8 @@ import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
 import clsx from "clsx";
 import { deepSearch, paperChoose } from "@/app/Services/Methodology";
-import ResearchGapsList from "@/app/Component/features/Research-Methodology/ResearchGapsList";
 import { Folder, Paperclip } from "lucide-react";
+import PaperShow from "@/app/Component/features/Research-Idea-generation/PaperShow";
 
 // --- Sub-Component: Themed Input Field for Light Mode ---
 const IconInput = ({ icon, ...props }) => {
@@ -73,17 +73,21 @@ export default function ResearchSearchForm() {
       const response = await deepSearch(searchData);
       if (response.papers) {
        // await handleChoosePapers(response.papers);
-       setPapers(response.papers)
+       console.log(response)
+       setPapers(response)
+               setLoading(false);
+
       } else {
         toast.error("Open access papers are not available please follow up with other two processes.");
         setNoPaper(true)
-        setLoading(false);
-      }
+     }
     } catch (err) {
       console.error(err);
       toast.error("An error occurred during the search.");
       setLoading(false);
     }
+        setLoading(false);
+
   };
 
 
@@ -169,7 +173,7 @@ export default function ResearchSearchForm() {
               <h2 className="text-3xl font-bold text-gray-800 mb-2">Your Research Results</h2>
               <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 mx-auto rounded-full"></div>
             </div>
-            <ResearchShowcase data={papers}  setData={setPapers}  />
+            <PaperShow data={papers}  setData={setPapers}  />
           </div>
         
           ) : null}
