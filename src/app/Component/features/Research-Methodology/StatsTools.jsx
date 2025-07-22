@@ -70,7 +70,7 @@ toast.error("Error in Generating Error.")
         <div className="min-h-screen bg-slate-100 font-sans p-4 sm:p-6 lg:p-8">
             <div className="max-w-7xl mx-auto">
                 <header className="mb-12 text-center">
-                    <h1 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">Research Methodology Overview</h1>
+                    <h1 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">Research Statistic Tools</h1>
                     <p className="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">A detailed breakdown of the methods, tools, and data sources for this study.</p>
                 </header>
 
@@ -78,7 +78,7 @@ toast.error("Error in Generating Error.")
                     {/* Main Content Column */}
                     <div className="lg:col-span-2 space-y-8">
                         {/* Data Platforms Section */}
-                        <SectionCard title="Data Platforms" icon={<Database className="h-7 w-7 text-teal-600" />}>
+                        <SectionCard title="Data Source Platforms" icon={<Database className="h-7 w-7 text-teal-600" />}>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {researchData.data_platforms.map((platform) => (
                                     <a

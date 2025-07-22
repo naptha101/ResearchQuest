@@ -74,7 +74,7 @@ setLoading(false);
         <div className="bg-gradient-to-r from-slate-700 to-slate-800 px-8 py-6 shadow-lg">
           <h1 className="text-3xl font-bold text-white flex items-center gap-3">
             <Lightbulb className="w-8 h-8" />
-            Research Study Overview
+                Research Type
           </h1>
         </div>
 
@@ -104,7 +104,7 @@ setLoading(false);
         <div className="px-8 py-6 border-b border-slate-200/50">
           <h2 className="text-xl font-semibold text-slate-800 mb-4 flex items-center gap-2">
             <MessageSquare className="w-5 h-5 text-slate-600" />
-            Research Justification
+            Research Type Justification
           </h2>
           <div className="bg-gradient-to-r from-slate-50/80 to-slate-100/80 p-6 rounded-xl border-l-4 border-slate-400 shadow-sm">
             <p className="text-slate-700 leading-relaxed">{data.justification}</p>
@@ -115,7 +115,7 @@ setLoading(false);
         <div className="px-8 py-6">
           <h2 className="text-xl font-semibold text-slate-800 mb-6 flex items-center gap-2">
             <Database className="w-5 h-5 text-slate-600" />
-            Study Design
+            Research Design
           </h2>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -133,7 +133,7 @@ Type of Study
                   </span>
                 </div>
                 <div>
-                  <span className="text-sm font-medium text-slate-600 block mb-2">Methods:</span>
+                  <span className="text-md font-medium text-slate-800 block mb-2">Methods:</span>
                   <div className="flex flex-wrap gap-2">
                     {data.study_design.data_source.method_or_source.map((method, index) => (
                       <span key={index} className="bg-white/90 border border-slate-200/70 text-slate-700 px-3 py-1 rounded-lg text-sm shadow-sm">
@@ -193,7 +193,8 @@ Type of Study
 
 
 <div className=' w-full py-3 my-5 flex justify-center items-start '>
-<button onClick={()=>getTools()} className=' px-2 py-1 gap-2 rounded-xl flex item-center justify-center bg-gradient-r from-white to-gray-50 text-black border-2 hover:scale-105 border-black '>
+<button onClick={()=>getTools()} className=' px-2 py-1 gap-2 shadow-gray-500 shadow-md
+ rounded-xl flex item-center justify-center bg-gradient-r from-white to-gray-50 text-black border-2 hover:scale-105 border-black '>
   <span>  Get Stats Tools Suggestions</span>
 {loading&&<span><Loader className='h-8 w-8 animate-spin'></Loader></span>}
 </button>

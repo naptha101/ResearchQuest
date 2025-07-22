@@ -5,6 +5,7 @@ import Hero from "./Component/home/Hero";
 import Partners from "./Component/home/Partners";
 import Features from "./Component/home/Features";
 import CTA from "./Component/home/CTA";
+import AboutUs from "./Component/home/AboutUs";
 
 export default function Home() {
   
@@ -25,6 +26,7 @@ export default function Home() {
       <div className="min-h-screen text-black bg-orange-50">
       
     <Hero></Hero>
+    <AboutUs></AboutUs>
     <Partners></Partners>
     {/* <Features></Features>  */}
   

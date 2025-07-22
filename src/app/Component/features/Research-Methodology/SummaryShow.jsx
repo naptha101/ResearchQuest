@@ -31,7 +31,7 @@ export default function Summary({analysisData,researchData,hypothesis,idea,overv
         <div className="min-h-screen bg-slate-100 font-sans p-4 sm:p-6 lg:p-8">
             <div className="max-w-7xl mx-auto">
                 <header className="mb-12 text-center">
-                    <h1 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">Analysis & Conclusion</h1>
+                    <h1 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">Hypothesis Study & Conclusion</h1>
                     <p className="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">A summary of the study's data analysis, validation, estimated results, and final conclusions.</p>
                 </header>
 
@@ -55,12 +55,13 @@ export default function Summary({analysisData,researchData,hypothesis,idea,overv
                     </div>
                     {/* Conclusion and Estimated Results */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <SectionCard title="Conclusion & Hypothesis" icon={<Target className="h-7 w-7 text-blue-600" />}>
-                            <p className="text-slate-600 leading-relaxed">{analysisData.conclusion_and_hypothesis_summary}</p>
-                        </SectionCard>
                         <SectionCard title="Estimated Results" icon={<Lightbulb className="h-7 w-7 text-amber-600" />}>
                              <p className="text-slate-600 leading-relaxed">{analysisData.estimated_results}</p>
                         </SectionCard>
+                        <SectionCard title="Conclusion & Hypothesis" icon={<Target className="h-7 w-7 text-blue-600" />}>
+                            <p className="text-slate-600 leading-relaxed">{analysisData.conclusion_and_hypothesis_summary}</p>
+                        </SectionCard>
+                        
                     </div>
 
                     {/* Data Analysis and Validation */}
@@ -73,7 +74,7 @@ export default function Summary({analysisData,researchData,hypothesis,idea,overv
 
             </div>
 
-<FlowChart overview={overview} hypothesis={hypothesis} researchData={researchData} idea={idea}></FlowChart>
+<FlowChart overview={overview} hypothesis={hypothesis} researchData={researchData} idea={idea} summary={analysisData}></FlowChart>
         </div>
     );
 }

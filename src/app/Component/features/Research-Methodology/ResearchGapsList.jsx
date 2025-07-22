@@ -35,7 +35,7 @@ toast.success("Scope Generated Successfully")
  }
   return (
     <div className="max-w-6xl mx-auto px-4 py-10 space-y-8">
-      <h2 className="text-3xl font-bold text-gray-800 text-center">Identified Research Gaps & Recommendations</h2>
+      <h2 className="text-3xl font-bold text-gray-800 text-center">Top 5 Literature Reviews based on your Keywords and Research Idea by reading 1 million+ Papers on Web and found Similarity.</h2>
 
       {data.map((item, index) => (
         <div

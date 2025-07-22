@@ -45,26 +45,28 @@ setLoading(false)
       </h2>
 
       <div className="bg-white border border-gray-200 shadow-lg rounded-2xl p-6 space-y-6">
+        
         <div>
-          <h3 className="text-xl font-semibold text-blue-700 mb-2">🧠 Hypothesis</h3>
-          <p className="text-gray-800 leading-relaxed">{hypothesis}</p>
+          <h3 className="text-xl font-semibold text-purple-700 mb-2">📌 Scope</h3>
+          <p className="text-gray-800 leading-relaxed">{scope}</p>
         </div>
+      
 
         <div>
           <h3 className="text-xl font-semibold text-green-700 mb-2">🎯 Objective</h3>
           <p className="text-gray-800 leading-relaxed">{objective}</p>
         </div>
-
-        <div>
-          <h3 className="text-xl font-semibold text-purple-700 mb-2">📌 Scope</h3>
-          <p className="text-gray-800 leading-relaxed">{scope}</p>
+          <div>
+          <h3 className="text-xl font-semibold text-blue-700 mb-2">🧠 Hypothesis</h3>
+          <p className="text-gray-800 leading-relaxed">{hypothesis}</p>
         </div>
+
       </div>
 
       <div className="w-full py-2 flex items-center justify-center">
 
 <button onClick={()=>{handleResearchDesign()}} className="p-2 gap-2 rounded-xl bg-gradient-to-l flex items-center from-yellow-400 to-yellow-500 text-xl text-white"> 
-    Research Design Mapping  
+Research Methodology
     {
     !loading?(
     <DicesIcon className="h-10 w-10 text-white"></DicesIcon>):

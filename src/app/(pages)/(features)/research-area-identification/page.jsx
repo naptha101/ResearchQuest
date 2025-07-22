@@ -320,7 +320,7 @@ function mapScoreToWidth(score) {
     <div className="px-4 sm:px-6 py-6 lg:px-8 pb-20">
     <div className="max-w-4xl mx-auto">
       <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 overflow-hidden">
-        <div className="bg-gradient-to-r from-orange-500 to-amber-400 p-8">
+        <div className="bg-gradient-to-r from-orange-400 to-amber-400 p-8">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Build Your Research Profile</h2>
           <p className="text-orange-100">Tell us about your academic background and research interests</p>
         </div>

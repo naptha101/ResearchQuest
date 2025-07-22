@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import clsx from "clsx";
 import { deepSearch, paperChoose } from "@/app/Services/Methodology";
 import ResearchGapsList from "@/app/Component/features/Research-Methodology/ResearchGapsList";
+import { Folder, Paperclip } from "lucide-react";
 
 // --- Sub-Component: Themed Input Field for Light Mode ---
 const IconInput = ({ icon, ...props }) => {
@@ -49,12 +50,11 @@ export default function ResearchSearchForm() {
     specialization: "",
     database: "arxiv",
     keywords: "",
-    researchIdea: "",
     api_key: process.env.NEXT_PUBLIC_OPEN_API_KEY,
   });
   const [papers, setPapers] = useState(null);
   const [loading, setLoading] = useState(false);
-
+   const [noPaper,setNoPaper]=useState(false)
   // (All your handler functions: handleChange, handleSearch, handleChoosePapers remain exactly the same)
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -63,6 +63,7 @@ export default function ResearchSearchForm() {
   
   const handleSearch = async () => {
     setLoading(true);
+    setNoPaper(false)
     setPapers(null); // Clear previous results
     try {
       const searchData = {
@@ -71,9 +72,11 @@ export default function ResearchSearchForm() {
       };
       const response = await deepSearch(searchData);
       if (response.papers) {
-        await handleChoosePapers(response.papers);
+       // await handleChoosePapers(response.papers);
+       setPapers(response.papers)
       } else {
-        toast.error("Error searching for papers.");
+        toast.error("Open access papers are not available please follow up with other two processes.");
+        setNoPaper(true)
         setLoading(false);
       }
     } catch (err) {
@@ -83,32 +86,8 @@ export default function ResearchSearchForm() {
     }
   };
 
-  const handleChoosePapers = async (data) => {
-    try {
-      const response = await paperChoose({ papers: data, openapikey: process.env.NEXT_PUBLIC_OPEN_API_KEY });
-      if (response.results) {
-        setPapers(response.results);
-        toast.success("Research gaps identified successfully!");
-      } else {
-        toast.error("Could not process the papers.");
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("An error occurred while analyzing papers.");
-    } finally {
-        setLoading(false);
-    }
-  };
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const subject = params.get('subject');
-    const specialization = params.get('specialization');
-    const keywords = params.get('keywords');
-    if (subject && specialization && keywords) {
-      setFormData((prev) => ({ ...prev, subject, specialization, keywords }));
-    }
-  }, []);
+
 
 
   return (
@@ -122,7 +101,7 @@ export default function ResearchSearchForm() {
           className="text-center mb-12"
         >
           <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
-            Discover <span className="text-orange-500">Research Methodology</span>
+            Discover <span className="text-orange-500">Research Idea</span>
           </h1>
           <p className="text-lg text-slate-600 max-w-3xl mx-auto">
             Our advanced AI platform simplifies your research process, bringing the world's knowledge right to your fingertips.
@@ -149,7 +128,7 @@ export default function ResearchSearchForm() {
             </div>
             <div className="space-y-6 mb-8">
               <IconInput label="Keywords" name="keywords" value={formData.keywords} onChange={handleChange} placeholder="neural, network, ai" icon={<IconKey />} />
-              <IconInput label="Your Research Idea" name="researchIdea" type="textarea" value={formData.researchIdea} onChange={handleChange} placeholder="Briefly describe your research idea..." icon={<IconLightBulb />} />
+              {/* <IconInput label="Your Research Idea" name="researchIdea" type="textarea" value={formData.researchIdea} onChange={handleChange} placeholder="Briefly describe your research idea..." icon={<IconLightBulb />} /> */}
             </div>
 
             <div className="flex justify-center">
@@ -162,6 +141,20 @@ export default function ResearchSearchForm() {
                 {loading ? "Searching..." : "Deep Search"}
               </button>
             </div>
+            <div className="flex mt-4 gap-5 justify-center">
+               <div
+                className="group relative flex w-full max-w-xs   items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-orange-300 to-amber-200 px-8 py-8 text-lg font-semibold shadow-lg transition-all text-black duration-300 hover:shadow-orange-500/40 hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+             <Folder className="h-6 w-6"></Folder>
+                Upload your Literature Reviews
+              </div>
+                <div
+                className="group relative flex w-full max-w-xs   items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-orange-300 to-amber-200 px-8 py-8 text-lg font-semibold shadow-lg transition-all text-black duration-300 hover:shadow-orange-500/40 hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+               <Paperclip className="h-6 w-6"></Paperclip>
+                Upload your research paper
+              </div>
+            </div>
           </motion.div>
         </div>
 
@@ -170,15 +163,15 @@ export default function ResearchSearchForm() {
           {loading ? (
             <LoadingIndicator key="loader" />
           ) : papers ? (
-            <motion.div
-              key="results"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="mt-12"
-            >
-              <ResearchGapsList data={papers} idea={formData.researchIdea} />
-            </motion.div>
+             
+          <div className="mt-16 animate-fade-in">
+            <div className="mb-8 text-center">
+              <h2 className="text-3xl font-bold text-gray-800 mb-2">Your Research Results</h2>
+              <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-indigo-600 mx-auto rounded-full"></div>
+            </div>
+            <ResearchShowcase data={papers}  setData={setPapers}  />
+          </div>
+        
           ) : null}
         </AnimatePresence>
       </div>
