@@ -337,7 +337,7 @@ const handleProceed = async () => {
             <div>
               <h4 className="font-semibold text-blue-900 mb-2">Supported File Types</h4>
               <p className="text-blue-800 text-sm">
-                PDF, DOC, DOCX, TXT, JPG, JPEG, PNG, GIF, MP4, MP3, ZIP, RAR
+                PDF
               </p>
               <p className="text-blue-700 text-sm mt-2">
                 Maximum file size: 50MB per file

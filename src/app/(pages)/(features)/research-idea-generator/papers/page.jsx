@@ -1,18 +1,21 @@
 "use client"
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Upload, File, X, Check, FileText, Image, Archive, Music, Video, Plus, ArrowRight, AlertCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/Context/UserAuth';
-import { uploadFile } from '@/app/Services/Literature_Review';
+import { finalReview, generateCitation, generateContext, generateTitle, uploadFile } from '@/app/Services/Literature_Review';
 import { toast } from 'react-toastify';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { GenerateIdea } from '@/app/Services/Idea-Generation';
+import IdeasGrid from '@/app/Component/features/Research-Idea-generation/IdeasGrid';
 
 export default function FileUploadComponent() {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
-  const [uploadMode, setUploadMode] = useState('single'); // 'single' or 'multiple'
+  const [uploadMode, setUploadMode] = useState('multiple'); // 'single' or 'multiple'
   const [isProcessing, setIsProcessing] = useState(false);
   const fileInputRef = useRef(null);
-  const {user}=useAuth()
+    const [Ideas,setIdeas]=useState(null)
+  
 
   const getFileIcon = (fileType) => {
     if (fileType.startsWith('image/')) return Image;
@@ -30,6 +33,9 @@ export default function FileUploadComponent() {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
+  const {user,setUser}=useAuth()
+
+
 
   const handleFileSelect = useCallback((files) => {
     const fileArray = Array.from(files);
@@ -72,41 +78,77 @@ export default function FileUploadComponent() {
   const clearAllFiles = () => {
     setSelectedFiles([]);
   };
-
-const router=useRouter()
+  const router=useRouter()
 const handleProceed = async () => {
   if (!selectedFiles || selectedFiles.length === 0) return;
 
   setIsProcessing(true);
 
   try {
-    const formData = new FormData();
-
+    
+ let response=null;
     // Append each selected file (if multiple)
     for (let i = 0; i < selectedFiles.length; i++) {
-      formData.append("file", selectedFiles[i]);
-    }
-
+        const formData = new FormData();
+        console.log(selectedFiles[i])
+    formData.append("file", selectedFiles[i]);
+    formData.append("s3_file_name", selectedFiles[i].name);
     formData.append("user_id", user._id);
     formData.append("bucket_name", process.env.NEXT_PUBLIC_BUCKET);
     formData.append("aws_access_key_id", process.env.NEXT_PUBLIC_AWS_ID);
     formData.append("aws_secret_access_key", process.env.NEXT_PUBLIC_ACCESS_KEY);
-    formData.append("s3_file_name", "New file " + Math.random());
 
-    const response = await uploadFile(formData);
+     response = await uploadFile(formData);
+}
 
     if(response.s3_url){
-        toast.success("Your paper uploaded succesfully");
-            const params = new URLSearchParams();
+    toast.success("Your paper uploaded succesfully");
 
-    params.set('paper', response.s3_url);
-   
-    const newUrl = `${window.location.pathname}/review?${params.toString()}`;
-    router.push(newUrl)
+      const [respTitle, respContext, respCitation] = await Promise.all([
+            generateTitle(response.s3_url),
+            generateContext(response.s3_url),
+            generateCitation(response.s3_url)
+          ]);
+ 
+     const val= {
+          titleLR: respTitle.results.title,
+          graphragLR: respContext.results,
+          citationLR: respCitation.results,
+          openapikey: process.env.NEXT_PUBLIC_OPEN_API_KEY
+        }
+ 
+             const resp=await finalReview(val)
+                               // console.log(resp)
+                    if(resp.results){
+                        
+                       const response=await GenerateIdea({
+                         combinedLR:resp,
+                         openapikey:process.env.NEXT_PUBLIC_OPEN_API_KEY
+                       })
+                       if(response.results.Research_Ideas){
+                         setIdeas(response.results.Research_Ideas)
+                       }else{
+                         toast.error("Can't generate ideas.")
+                       }
+                    }else{
+                        toast.error("Error in Generating Literature Review");
+                    }
+//     const params = new URLSearchParams();
+//     params.set('paper', response.s3_url);
+    
+//     let names=selectedFiles[0].name;
+//     for (let i = 1; i < selectedFiles.length; i++) {
+//   //  console.log(selectedFiles[i].name)
+//   names+=(","+selectedFiles[i].name)
+//     }
+    
+//      params.set('names',names)
+//     const newUrl = `${window.location.pathname}/review?${params.toString()}`;
+//     router.push(newUrl)
     }else{
         toast.error("Error occured while uploading File")
     }
-    //console.log(response);
+
   } catch (err) {
     console.error("Upload failed:", err);
   }
@@ -114,7 +156,6 @@ const handleProceed = async () => {
   setIsProcessing(false);
   alert(`Processing ${selectedFiles.length} file(s)...`);
 };
-
 
   const openFileDialog = () => {
     fileInputRef.current?.click();
@@ -330,7 +371,7 @@ const handleProceed = async () => {
             <div>
               <h4 className="font-semibold text-blue-900 mb-2">Supported File Types</h4>
               <p className="text-blue-800 text-sm">
-                PDF
+                PDF, DOC, DOCX
               </p>
               <p className="text-blue-700 text-sm mt-2">
                 Maximum file size: 50MB per file
@@ -338,6 +379,10 @@ const handleProceed = async () => {
             </div>
           </div>
         </div>
+        {
+  Ideas&&
+  <IdeasGrid ideasData={Ideas}></IdeasGrid>
+}
       </div>
     </div>
   );

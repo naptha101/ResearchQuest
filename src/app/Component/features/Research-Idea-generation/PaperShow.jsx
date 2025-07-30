@@ -6,6 +6,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { getPreviousResearch } from '@/app/Services/Literation-Review';
 import { finalReview, generateCitation, generateContext, generateTitle } from '@/app/Services/Literature_Review';
 import { toast } from 'react-toastify';
+import ProgressBar from './ProgressBar';
+import { GenerateIdea } from '@/app/Services/Idea-Generation';
+import IdeasGrid from './IdeasGrid';
 
 const PaperShow = ({ data,setData,isAdvanced }) => {
   const [activePaper, setActivePaper] = useState(null);
@@ -15,16 +18,34 @@ const PaperShow = ({ data,setData,isAdvanced }) => {
   const [selectedPapers, setSelectedPapers] = useState([]);
   const [lrInputs,setLrInputs]=useState([]);
   const [reviews,setReviews]=useState([]);
+  const [Ideas,setIdeas]=useState(null)
   const router=useRouter()
+
+const [generationProgress, setGenerationProgress] = useState(0);
+const [isGenerating, setIsGenerating] = useState(false);
+const progressSteps = ['Initializing', 'Fetching Papers', 'Analyzing Content', 'Generating Review', 'Finalizing'];
+const progressMessages = [
+  'Starting the literature review generation process...',
+  'Retrieving selected paper details...',
+  'Analyzing paper contents and extracting key information...',
+  'Generating comprehensive literature review...',
+  'Finalizing and formatting your review...',
+  'Literature review generated successfully!'
+];
+
   const togglePaper = (id) => {
     setActivePaper(activePaper === id ? null : id);
   };
- const handleLiteraturReview = async () => {
+const handleLiteraturReview = async () => {
   try {
+    setIsGenerating(true);
+    setGenerationProgress(1); // Initializing
+    
     // Process papers sequentially to avoid race conditions
     const newInputs = [];
     
     for (const val of selectedPapers) {
+      setGenerationProgress(2); // Fetching Papers
       const [respTitle, respContext, respCitation] = await Promise.all([
         generateTitle(val.link),
         generateContext(val.link),
@@ -32,28 +53,36 @@ const PaperShow = ({ data,setData,isAdvanced }) => {
       ]);
 
       if (respTitle.results && respContext.results && respCitation.results) {
+        setGenerationProgress(3); // Analyzing Content
         newInputs.push({
           titleLR: respTitle.results.title,
           graphragLR: respContext.results,
           citationLR: respCitation.results,
-          openapikey:process.env.NEXT_PUBLIC_OPEN_API_KEY
+          openapikey: process.env.NEXT_PUBLIC_OPEN_API_KEY
         });
-
-
       } else {
         toast.error("Error in Generating Literature Review");
-        return; // Exit if any request fails
+        setIsGenerating(false);
+        return;
       }
     }
 
-    // Single state update with all results
     setLrInputs(newInputs);
-   await  handleReviewGen()
-    console.log(newInputs);
+    setGenerationProgress(4); // Generating Review
+    await handleReviewGen();
+    setGenerationProgress(5); // Finalizing
+    
+    // Small delay before hiding progress bar
+    setTimeout(() => {
+      setIsGenerating(false);
+      setGenerationProgress(0);
+    }, 1500);
 
   } catch (err) {
     console.error(err);
     toast.error("Failed to generate literature review");
+    setIsGenerating(false);
+    setGenerationProgress(0);
   }
 };
 const handleReviewGen=async()=>{
@@ -62,8 +91,11 @@ const handleReviewGen=async()=>{
         const newReviews=[]
         for(const val of lrInputs){
         const resp=await finalReview(val)
+                   // console.log(resp)
+
         if(resp.results){
             newReviews.push(resp)
+           // console.log(resp)
         }else{
             toast.error("Error in Generating Literature Review");
         }
@@ -77,9 +109,25 @@ const handleReviewGen=async()=>{
 
     }
 }
+ const handleIdeaGeneration=async()=>{
+  
+  try{
+const response=await GenerateIdea({
+  combinedLR:reviews,
+  openapikey:process.env.NEXT_PUBLIC_OPEN_API_KEY
+})
+if(response.results.Research_Ideas){
+  setIdeas(response.results.Research_Ideas)
+}else{
+  toast.error("Can't generate ideas.")
+}
 
-
-
+}
+  catch(err){
+console.log(err)
+toast.error("Error in generating Ideas.")
+  }
+ }
 
 
 const params=useSearchParams();
@@ -128,6 +176,8 @@ if(id)handleHistory(id)
   const togglePaperSelection = (paper) => {
     setSelectedPapers(prev => {
       // If paper is already selected, remove it
+         if(prev.length>=5)return prev
+
       if (prev.some(p => p.index === paper.index)) {
         return prev.filter(p => p.index !== paper.index);
       }
@@ -374,11 +424,51 @@ const [openSelected,setSelected]=useState(true);
         {/* Footer */}
        {selectedPapers.length>0&& <div className="mt-12 pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
         
-        <button onClick={()=>handleLiteraturReview()} className='px-6 py-2 rounded-2xl bg-amber-400'>Generate Literature Review</button>
-        </div>}
+<button 
+  onClick={() => handleLiteraturReview()} 
+  disabled={isGenerating}
+  className={`px-6 py-3 rounded-2xl font-medium transition-all duration-300 ${
+    isGenerating 
+      ? 'bg-indigo-400 cursor-not-allowed' 
+      : 'bg-indigo-600 hover:bg-indigo-700 shadow-lg hover:shadow-xl'
+  } text-white flex items-center justify-center`}
+>
+  {isGenerating ? (
+    <>
+      <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      Generating...
+    </>
+  ) : (
+    'Generate Literature Review'
+  )}
+</button>        
+
+
+
+{ !isGenerating&&reviews.length>0&&
+  <button onClick={()=>{handleIdeaGeneration()}} className='px-6 py-3 rounded-2xl font-medium transition-all duration-300 bg-orange-500 hover:bg-orange-700 shadow-lg test-white hover:shadow-xl '> Generate Research Idea</button>
+}
+
+
+</div>}
       </div>
 
+{isGenerating && (
+  <ProgressBar 
+    steps={progressSteps} 
+    currentStep={generationProgress} 
+    progressMessages={progressMessages} 
+  />
+)}
 
+
+{
+  Ideas&&
+  <IdeasGrid ideasData={Ideas}></IdeasGrid>
+}
 
     </div>
   );

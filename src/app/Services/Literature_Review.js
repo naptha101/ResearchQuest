@@ -83,7 +83,7 @@ return err.message
 export const finalReview=async(data)=>{
     try{
        // console.log(data)
-const response=await axios.post(process.env.NEXT_PUBLIC_OPEN_ANU+"phase2/reviews/LRgeneration/lr_json",data);
+const response=await axios.post(process.env.NEXT_PUBLIC_OPEN_API+"literature_review_additional/lr_table_updated",data);
 //console.log(response.data)
 return response.data  
 
@@ -96,8 +96,9 @@ return
 }
 export const summarizeReview=async(data)=>{
     try{
+   //     console.log(data)
 const response=await axios.post(process.env.NEXT_PUBLIC_OPEN_API+"literature_review_additional/generate_summarized_lr",data)
-console.log(response)
+
 return response.data
     }
     catch(err){

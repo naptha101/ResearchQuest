@@ -119,10 +119,10 @@ export const PaperCard = ({ paper, index, onComplete, onError, updatePaperData }
         graphragLR: context,
         openapikey: process.env.NEXT_PUBLIC_OPEN_API_KEY
       })
-      
+    //  console.log(response)
       if (response.results) {
         setResult(response.results)
-        updatePaperData({ title, authors, result: response.results, isComplete: true, hasError: false })
+        updatePaperData({ title, authors, result: response.results, isComplete: true, hasError: false,citation })
         onComplete()
       } else {
         setReviewError(true)
@@ -140,6 +140,7 @@ export const PaperCard = ({ paper, index, onComplete, onError, updatePaperData }
       setReviewLoading(false)
     }
   }
+  
 
   const summarizePaper = async () => {
     setSummaryLoading(true)
@@ -221,58 +222,70 @@ export const PaperCard = ({ paper, index, onComplete, onError, updatePaperData }
           hasError={reviewError}
         >
           {result && (
-            <div className="w-full bg-white px-4 py-6 font-serif text-gray-800 leading-relaxed tracking-wide">
-              <article className="max-w-none space-y-8">
-                <header className="text-center">
-                  <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900 font-sans mb-3">
-                    {title}
-                  </h1>
-                  {authors.length > 0 && <p className="text-base sm:text-lg text-gray-500 italic">{authors.join(', ')}</p>}
-                </header>
+           <div className="w-full bg-white px-4 py-6 font-serif text-gray-800 leading-relaxed tracking-wide">
+  <article className="max-w-none space-y-8">
+    <header className="text-center">
+      <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900 font-sans mb-3">
+        {title}
+      </h1>
+      {authors.length > 0 && <p className="text-base sm:text-lg text-gray-500 italic">{authors.join(', ')}</p>}
+    </header>
 
-                <Section title="Key Findings">
-                  {result.Findings}
-                </Section>
+    <Section title="Key Findings">
+      {result.Findings}
+    </Section>
 
-                <Section title="Methodology">
-                  {result.Methodology}
-                </Section>
+    <Section title="Methodology">
+      {result.Methodology}
+    </Section>
 
-                <Section title="Novelty of the Study">
-                  {result.Novelty}
-                </Section>
+    <Section title="Data Source of Methodology">
+      {result.DataSourceOfMethodology}
+    </Section>
 
-                {result.ResearchGaps && result.ResearchGaps.length > 0 && (
-                  <Section title="Research Gaps">
-                    <ul className="list-disc pl-6 space-y-2 marker:text-orange-500">
-                      {result.ResearchGaps.map((item, idx) => (
-                        <li key={idx}>{item.gap}</li>
-                      ))}
-                    </ul>
-                  </Section>
-                )}
+    <Section title="Novelty of the Study">
+      {result.Novelty}
+    </Section>
 
-                {result.StudyObjectives && result.StudyObjectives.length > 0 && (
-                  <Section title="Study Objectives">
-                    <ol className="list-decimal pl-6 space-y-2 marker:text-sky-600">
-                      {result.StudyObjectives.map((item, idx) => (
-                        <li key={idx}>{item.objective}</li>
-                      ))}
-                    </ol>
-                  </Section>
-                )}
+    <Section title="Relationship with Study">
+      {result.RelationshipWithStudy}
+    </Section>
 
-                <Section title="Comprehensive Summary">
-                  {result.ResearchSummary}
-                </Section>
-                
-                {citation && (
-                  <Section title="Citation">
-                    {citation}
-                  </Section>
-                )}
-              </article>
-            </div>
+    {result.ResearchGaps && result.ResearchGaps.length > 0 && (
+      <Section title="Research Gaps">
+        <ul className="list-disc pl-6 space-y-2 marker:text-orange-500">
+          {result.ResearchGaps.map((item, idx) => (
+            <li key={idx}>{item.gap}</li>
+          ))}
+        </ul>
+      </Section>
+    )}
+
+    {result.StudyObjectives && result.StudyObjectives.length > 0 && (
+      <Section title="Study Objectives">
+        <ol className="list-decimal pl-6 space-y-2 marker:text-sky-600">
+          {result.StudyObjectives.map((item, idx) => (
+            <li key={idx}>{item.objective}</li>
+          ))}
+        </ol>
+      </Section>
+    )}
+
+    <Section title="Statistical Tools">
+      {result.StatisticalTools}
+    </Section>
+
+    <Section title="Research Summary">
+      {result.ResearchSummary}
+    </Section>
+    
+    {citation && (
+      <Section title="Citation">
+        {citation}
+      </Section>
+    )}
+  </article>
+</div>
           )}
         </LoadingCard>
       </div>

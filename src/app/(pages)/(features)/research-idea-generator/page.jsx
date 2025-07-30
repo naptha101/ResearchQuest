@@ -6,6 +6,10 @@ import clsx from "clsx";
 import { deepSearch, paperChoose } from "@/app/Services/Methodology";
 import { Folder, Paperclip } from "lucide-react";
 import PaperShow from "@/app/Component/features/Research-Idea-generation/PaperShow";
+import { createFolder } from "@/app/Services/Literature_Review";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/Context/UserAuth";
+import { AuthenticateProfile } from "@/app/Services/Auth";
 
 // --- Sub-Component: Themed Input Field for Light Mode ---
 const IconInput = ({ icon, ...props }) => {
@@ -55,13 +59,14 @@ export default function ResearchSearchForm() {
   const [papers, setPapers] = useState(null);
   const [loading, setLoading] = useState(false);
    const [noPaper,setNoPaper]=useState(false)
+   const {user,setUser}=useAuth()
   // (All your handler functions: handleChange, handleSearch, handleChoosePapers remain exactly the same)
-  const handleChange = (e) => {
+const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
   
-  const handleSearch = async () => {
+const handleSearch = async () => {
     setLoading(true);
     setNoPaper(false)
     setPapers(null); // Clear previous results
@@ -75,7 +80,7 @@ export default function ResearchSearchForm() {
        // await handleChoosePapers(response.papers);
        console.log(response)
        setPapers(response)
-               setLoading(false);
+      setLoading(false);
 
       } else {
         toast.error("Open access papers are not available please follow up with other two processes.");
@@ -89,8 +94,69 @@ export default function ResearchSearchForm() {
         setLoading(false);
 
   };
+const router=useRouter()
+  useEffect(() => {
+    const checkUserAccess = async () => {
+      try {
+        const res = await AuthenticateProfile()
+       // console.log(res)
+        
+        if (!res.data) {
+          router.push('/auth/login')
+          return
+        }
+
+        setUser(res.data)
+
+        if (!res.data.tokenAccount || res.data.tokenAccount.balance <= 1) {
+          // setShowInsufficientTokenPopup(true)
+        }
+      } catch (err) {
+        console.log(err)
+        router.push('/auth/login')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    checkUserAccess()
+  }, [])
 
 
+  const handleCreateFolder=async (type)=>{
+    setLoading(true)
+    try{
+        const res=await createFolder({user_id:user._id,
+            bucket_name:process.env.NEXT_PUBLIC_BUCKET,
+            aws_access_key_id:process.env.NEXT_PUBLIC_AWS_ID,
+            aws_secret_access_key:process.env.NEXT_PUBLIC_ACCESS_KEY
+        })
+      //  console.log(res)
+        if(res){
+           type==='reviews'?router.push('/research-idea-generator/reviews'):router.push('/research-idea-generator/papers')
+        toast.success("Your folder is created successfully")
+        }else{
+        toast.error("Error in creating bucket")
+
+        }
+    }
+    catch(err){
+        console.log(err)
+        toast.error("Error in creating bucket")
+    }
+    setLoading(false)
+  }
+
+const handleLiteratureReview=async(type)=>{
+  try{
+await handleCreateFolder(type)
+
+  }
+  catch(err){
+    console.error(err)
+    toast.error("Error in Literature Review ")
+  }
+}
 
 
 
@@ -147,12 +213,18 @@ export default function ResearchSearchForm() {
             </div>
             <div className="flex mt-4 gap-5 justify-center">
                <div
+               onClick={()=>{
+                handleLiteratureReview('reviews')
+               }}
                 className="group relative flex w-full max-w-xs   items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-orange-300 to-amber-200 px-8 py-8 text-lg font-semibold shadow-lg transition-all text-black duration-300 hover:shadow-orange-500/40 hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
               >
              <Folder className="h-6 w-6"></Folder>
                 Upload your Literature Reviews
               </div>
                 <div
+                 onClick={()=>{
+                handleLiteratureReview('papers')
+               }}
                 className="group relative flex w-full max-w-xs   items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-orange-300 to-amber-200 px-8 py-8 text-lg font-semibold shadow-lg transition-all text-black duration-300 hover:shadow-orange-500/40 hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                <Paperclip className="h-6 w-6"></Paperclip>

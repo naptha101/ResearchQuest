@@ -3,8 +3,9 @@ import { finalReview, generateCitation, generateContext, generateTitle, summariz
 import { useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { FileText, Quote, BookOpen, CheckCircle, AlertCircle, BookAIcon, ChevronRight, RefreshCw } from 'lucide-react'
+import { FileText, Quote, BookOpen, CheckCircle, AlertCircle, BookAIcon, ChevronRight, RefreshCw, Download } from 'lucide-react'
 import { handleRegister } from '@/app/Services/Auth'
+import { generateDocxFromResult } from '@/app/Services/GenerateReviewDoc'
 
 const LoadingSpinner = ({ size = 'md', className = '' }) => {
   const sizeClasses = {
@@ -282,6 +283,16 @@ const page = () => {
     }
   }
 
+  const handleDownload=async()=>{
+    try{
+      generateDocxFromResult(title,authors,result, citation)
+    }
+    catch(err){
+      console.log(err)
+      toast.error("Error in Downloading docx file.")
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
@@ -330,48 +341,7 @@ const page = () => {
               </div>
             )}
           </LoadingCard>
-          
-          {/* Context Card */}
-          {/* <LoadingCard
-            icon={BookOpen}
-            title="Context Generation"
-            subtitle="Understanding the research context"
-            isLoading={contextLoading}
-            hasError={contextError}
-          >
-            {context && (
-              <div className="space-y-3">
-                <h3 className="text-base font-semibold text-gray-500">Research Context</h3>
-                <p className="text-gray-700 whitespace-pre-line">
-                  {context}
-                </p>
-              </div>
-            )}
-          </LoadingCard> */}
-          
-          {/* Citation Card */}
-          {/* <LoadingCard
-            icon={Quote}
-            title="Citation Generation"
-            subtitle="Generating proper citation"
-            isLoading={citationLoading}
-            hasError={citationError}
-          >
-            {citation && (
-              <div className="space-y-3">
-                <h3 className="text-base font-semibold text-gray-500">Citation</h3>
-                <p className="text-gray-700 italic">
-                  {citation}
-                </p>
-                {authors && authors.length > 0 && (
-                  <div className="mt-2">
-                    <h4 className="text-sm font-medium text-gray-500">Authors</h4>
-                    <p className="text-gray-600">{authors.join(', ')}</p>
-                  </div>
-                )}
-              </div>
-            )}
-          </LoadingCard> */}
+        
         </div>
         
         {/* Review Section - Full Width */}
@@ -380,67 +350,83 @@ const page = () => {
             icon={BookAIcon}
             title="Literature Review"
             subtitle="Comprehensive analysis of the paper"
-            isLoading={reviewLoading}
-            hasError={reviewError}
+            isLoading={reviewLoading||titleLoading||citationLoading}
+            hasError={false}
           >
-            {result && (
-              <div className="w-full bg-white px-4 sm:px-8 md:px-12 lg:px-16 py-8 font-serif text-gray-800 leading-relaxed tracking-wide selection:bg-yellow-200">
-                <article className="max-w-none space-y-12">
-                  <header className="text-center">
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 font-sans mb-3">
-                      {title}
-                    </h1>
-                    {authors && <p className="text-base sm:text-lg text-gray-500 italic">{authors.join(', ')}</p>}
-                  </header>
+             {result && (
+                     <div className="w-full bg-white px-4 py-6 font-serif text-gray-800 leading-relaxed tracking-wide">
+            <article className="max-w-none space-y-8">
+              <header className="text-center">
+                <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900 font-sans mb-3">
+                  {title}
+                </h1>
+                {authors.length > 0 && <p className="text-base sm:text-lg text-gray-500 italic">{authors.join(', ')}</p>}
+              </header>
+          
+              <Section title="Key Findings">
+                {result.Findings}
+              </Section>
+          
+              <Section title="Methodology">
+                {result.Methodology}
+              </Section>
+          
+              <Section title="Data Source of Methodology">
+                {result.DataSourceOfMethodology}
+              </Section>
+          
+              <Section title="Novelty of the Study">
+                {result.Novelty}
+              </Section>
+          
+              <Section title="Relationship with Study">
+                {result.RelationshipWithStudy}
+              </Section>
+          
+              {result.ResearchGaps && result.ResearchGaps.length > 0 && (
+                <Section title="Research Gaps">
+                  <ul className="list-disc pl-6 space-y-2 marker:text-orange-500">
+                    {result.ResearchGaps.map((item, idx) => (
+                      <li key={idx}>{item.gap}</li>
+                    ))}
+                  </ul>
+                </Section>
+              )}
+          
+              {result.StudyObjectives && result.StudyObjectives.length > 0 && (
+                <Section title="Study Objectives">
+                  <ol className="list-decimal pl-6 space-y-2 marker:text-sky-600">
+                    {result.StudyObjectives.map((item, idx) => (
+                      <li key={idx}>{item.objective}</li>
+                    ))}
+                  </ol>
+                </Section>
+              )}
+          
+              <Section title="Statistical Tools">
+                {result.StatisticalTools}
+              </Section>
+          
+              <Section title="Research Summary">
+                {result.ResearchSummary}
+              </Section>
+              
+              {citation && (
+                <Section title="Citation">
+                  {citation}
+                </Section>
+              )}
+            </article>
 
-                  <Section title="Key Findings">
-                    {result.Findings}
-                  </Section>
+          <button
+      onClick={handleDownload}
+      className="bg-gradient-to-r mt-3 from-blue-500 to-purple-600 text-white hover:shadow-lg flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-300"
+    >
+      Download .docx <Download className="w-4 h-4"></Download>
+    </button>
 
-                  <Section title="Methodology">
-                    {result.Methodology}
-                  </Section>
-
-                  <Section title="Novelty of the Study">
-                    {result.Novelty}
-                  </Section>
-
-                  {result.ResearchGaps && result.ResearchGaps.length > 0 && (
-                    <Section title="Research Gaps">
-                      <ul className="list-disc pl-6 space-y-2 marker:text-orange-500">
-                        {result.ResearchGaps.map((item, idx) => (
-                          <li key={idx}>{item.gap}</li>
-                        ))}
-                      </ul>
-                    </Section>
-                  )}
-
-                  {result.StudyObjectives && result.StudyObjectives.length > 0 && (
-                    <Section title="Study Objectives">
-                      <ol className="list-decimal pl-6 space-y-2 marker:text-sky-600">
-                        {result.StudyObjectives.map((item, idx) => (
-                          <li key={idx}>{item.objective}</li>
-                        ))}
-                      </ol>
-                    </Section>
-                  )}
-
-                  <Section title="Comprehensive Summary">
-                    {result.ResearchSummary}
-                  </Section>
-                  
-                  {citation && (
-                    <Section title="Citation">
-                      {citation}
-                    </Section>
-                  )}
-
-                  <footer className="pt-8 border-t border-gray-200 mt-12 text-center text-sm text-gray-400">
-                    Crafted with scholarly elegance — © {new Date().getFullYear()}
-                  </footer>
-                </article>
-              </div>
-            )}
+          </div>
+                    )}
           </LoadingCard>
         </div>
         
@@ -507,7 +493,7 @@ const page = () => {
         )}
         
         {/* Error Message */}
-        {getErrorCount() > 0 && (
+        { (contextError||titleError||reviewError)&&(!contextLoading&&!titleLoading&&!reviewLoading) && (
           <div className="mt-8 bg-red-50 rounded-xl p-6 border border-red-200 animate-fade-in">
             <div className="flex items-center gap-3 mb-4">
               <div className="p-2 rounded-full bg-red-100">
