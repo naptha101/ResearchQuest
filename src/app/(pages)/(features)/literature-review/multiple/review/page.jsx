@@ -162,10 +162,10 @@ const Page = () => {
   // It is self-contained and manages its own state for a smooth user experience.
   const handleDownloadRequest = async () => {
       // Prevent download if papers are not yet processed.
-      if (!allComplete) {
-          toast.warn("Please wait until all papers are processed.");
-          return;
-      }
+      // if (!allComplete) {
+      //     toast.warn("Please wait until all papers are processed.");
+      //     return;
+      // }
 
       setIsDownloading(true);
       toast.info("Preparing your document. This may take a moment...", { autoClose: 5000 });
@@ -286,7 +286,7 @@ const Page = () => {
          <div className="mt-8 flex justify-center animate-slide-up">
            <button
              onClick={handleDownloadRequest}
-             disabled={!allComplete || isDownloading}
+             disabled={ isDownloading}
              className="group relative px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-2xl shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 overflow-hidden"
            >
              <div className="absolute inset-0 bg-gradient-to-r from-orange-600 to-amber-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>

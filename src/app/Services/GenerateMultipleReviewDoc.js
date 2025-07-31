@@ -152,7 +152,7 @@ export async function generateCompleteReviewDoc(
     new Paragraph({ text: "Citations:", heading: HeadingLevel.HEADING_1 }),
   );
   paperData.forEach((item, idx) => {
-    docContent.push(heading(`Paper ${idx + 1}`));
+    // docContent.push(heading(`Paper ${idx + 1}`));
     docContent.push(heading(item.title));
     docContent.push(paragraph(item.citation || ""));
   });
