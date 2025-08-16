@@ -1,7 +1,7 @@
 "use client"
 import { finalReview, generateCitation, generateContext, generateTitle, summarizeReview } from '@/app/Services/Literature_Review'
 import { useSearchParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import { FileText, Quote, BookOpen, CheckCircle, AlertCircle, BookAIcon, ChevronRight, RefreshCw, Download } from 'lucide-react'
 import { handleRegister } from '@/app/Services/Auth'
@@ -110,7 +110,7 @@ const Section = ({ title, children }) => {
   );
 }
 
-const page = () => {
+const PageComponent = () => {
   const [title, setTitles] = useState(null)
   const [context, setContext] = useState(null)
   const [citation, setCitation] = useState(null)
@@ -518,4 +518,14 @@ const page = () => {
   )
 }
 
-export default page
+
+export default function pageWrapper(){
+
+  return (
+<Suspense fallback={<LoadingSpinner></LoadingSpinner>}>
+  <PageComponent></PageComponent>
+</Suspense>
+
+
+  )
+}

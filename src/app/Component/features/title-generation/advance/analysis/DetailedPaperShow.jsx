@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import ResearchTitlesDisplay from './ShowAdvanceTitles';
 import { useSearchParams } from 'next/navigation';
 
-const DetailedPaperShow = ({ papers,keywords }) => {
+const DetailedPaperShow = ({ papers,keywords,selectedPapers }) => {
 
     const [data,setData]=useState(null)
     const [loading,setLoading]=useState(false);
@@ -15,15 +15,15 @@ const DetailedPaperShow = ({ papers,keywords }) => {
             setLoading(true)
 
         try{
-             const params = new URLSearchParams(window.location.search);
-             const id=params.get("id")
+    const params = new URLSearchParams(window.location.search);
+    const id=params.get("id")
     const specialization = params.get('specialization');
     const keywords = params.get('keywords')?.split(',');
-         const data={
-            papers:papers,
-            specialization: specialization,
+    const data={
+    papers:papers,
+    specialization: specialization,
     keywords:keywords,
-          tokensToDebit:1,
+    tokensToDebit:1,
     description:"Research Title Generation TEST",
     id:id
          }
@@ -152,10 +152,9 @@ handleHistory(id)
       <button onClick={()=>{!keywords?handleGenereateTitles():handleSimpleTitle()}} className='w-[30vw] my-3 cursor-pointer shadow-2xl hover:scale-105 text-white py-4 text-2xl bg-gradient-to-r from-amber-400 rounded-2xl to-orange-400'>
   Generate Advance Titles
 
-      </button>{
-
-        !loading&&data&&
-      <ResearchTitlesDisplay data={data}></ResearchTitlesDisplay>}
+      </button>{                                                                             
+        data&&!loading&&
+      <ResearchTitlesDisplay data={data} selectedPapers={selectedPapers}  gaps={papers}></ResearchTitlesDisplay>}
       {loading && (
           <div className="mt-16 flex flex-col items-center justify-center">
             <div className="relative w-24 h-24 mb-6">

@@ -2,6 +2,7 @@ import { researchDesign } from "@/app/Services/Methodology"
 import { DicesIcon, Loader } from "lucide-react"
 import { useState } from "react"
 import ResearchDesignDetails from "./ResearchDesignDetails "
+import { toast } from "react-toastify"
 
 const ResearchOverview = ({ data,idea,papers }) => {
   const { hypothesis, objective, scope } = data
@@ -19,11 +20,9 @@ setLoading(true)
     })
     if(response.results){
         setDesign(response.results)
-
     }
  else{
        toast.error("Can't proceed with your request.")
-
  }
 
 }

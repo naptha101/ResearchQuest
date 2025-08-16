@@ -1,7 +1,7 @@
 "use client"
 import { consolidatedReport, finalReview, generateCitation, generateContext, generateTitle, summarizeReview } from '@/app/Services/Literature_Review'
 import { useSearchParams } from 'next/navigation'
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, Suspense } from 'react'
 import { toast } from 'react-toastify'
 import { FileText, Quote, BookOpen, CheckCircle, AlertCircle, BookAIcon, ChevronRight,ChevronDown, ChevronUp,  Users, Target, Lightbulb, Search, Loader, Sparkles, RefreshCw, Download } from 'lucide-react'
 import { PaperCard } from '@/app/Component/features/Literature-Review/multiple/PaperCard'
@@ -44,7 +44,21 @@ const StatusBadge = ({ status, count }) => {
 }
 
 
-const Page = () => {
+const LoadingSpinner = ({ size = 'md', className = '' }) => {
+  const sizeClasses = {
+    sm: 'w-4 h-4',
+    md: 'w-6 h-6',
+    lg: 'w-8 h-8'
+  }
+  
+  return (
+    <div className={`${sizeClasses[size]} ${className}`}>
+      <div className="animate-spin rounded-full border-2 border-gray-300 border-t-blue-600 w-full h-full"></div>
+    </div>
+  )
+}
+
+const PageComponent = () => {
   const params = useSearchParams()
   const [papers, setPapers] = useState([])
   const [completedPapers, setCompletedPapers] = useState(0)
@@ -84,7 +98,7 @@ const Page = () => {
   // This is the original function, left untouched as it is passed to the ReviewTable component.
   const handleConsolidatedReview=async()=>{
     try{
-      console.log(paperData)
+     // console.log(paperData)
       const cleanedData = paperData.map(item => {
         const { result } = item;
         const { DataSourceOfMethodology, RelationshipWithStudy, StatisticalTools, ...restResult } = result;
@@ -142,21 +156,7 @@ const Page = () => {
     }
   }
   
-  // This is the original function, left untouched.
-  const handleDocGeneration=async()=>{
-    try{
-      await summarizePaper()
-      console.log(summariesArray,consolidatedReview)
-      if(paperData&&summariesArray.length>0&&consolidatedReview){
-        console.log(summariesArray)
-        generateCompleteReviewDoc(paperData,summariesArray,consolidatedReview)
-      }
-    }
-    catch(err){
-      console.error(err)
-      toast.error("Error generating document.")
-    }
-  }
+
 
   // This is the new, improved download handler for the main button.
   // It is self-contained and manages its own state for a smooth user experience.
@@ -195,7 +195,7 @@ const Page = () => {
               const { result } = item;
               const {
                   DataSourceOfMethodology,
-                  RelationshipWithStudy,
+                  RelationshipWithStuedy,
                   StatisticalTools,
                   ...restResult
               } = result;
@@ -263,7 +263,7 @@ const Page = () => {
             </h2>
             <div className="flex flex-wrap gap-2 justify-center sm:justify-end">
               <StatusBadge status="completed" count={completedPapers} />
-              <StatusBadge status="loading" count={loadingPapers} />
+              <StatusBadge status="loading" count={loadingPapers>=0?loadingPapers:0} />
               <StatusBadge status="error" count={errorPapers} />
             </div>
           </div>
@@ -362,4 +362,12 @@ const Page = () => {
   )
 }
 
-export default Page
+export default function PageWrapper(){
+
+  return (
+    <Suspense fallback={<LoadingSpinner></LoadingSpinner>}>
+  
+      <PageComponent></PageComponent>
+    </Suspense>
+  )
+}

@@ -21,7 +21,7 @@ const AdvanceAnalysis = ({ papers,keyword }) => {
       const response = await paperReviewAnalysis(papers,id);
    //   console.log(response)
       if(response.output.papers){
-        setReseachPapers(response.output.papers)
+      setReseachPapers(response.output.papers)
       setLoading(false)
       }else{
         toast.error("No papers found")
@@ -106,7 +106,7 @@ handlePaperHistory()
         Paper Review Analysis
       </button>
 
-      {researchPapers&&!loading&&<DetailedPaperShow papers={researchPapers} keywords={keyword}>
+      {researchPapers&&researchPapers.length>0&&!loading&&<DetailedPaperShow papers={researchPapers} selectedPapers={papers} keywords={keyword}>
 
       </DetailedPaperShow>}
      {loading && (
