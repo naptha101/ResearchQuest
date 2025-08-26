@@ -9,58 +9,58 @@ import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
 const page = () => {
-    const { user, setUser } = useAuth()
-        const [loading, setLoading] = useState(true)
-        const [showInsufficientTokenPopup, setShowInsufficientTokenPopup] = useState(false)
-      const router=useRouter()
-     useEffect(() => {
-        const checkUserAccess = async () => {
-          try {
-            const res = await AuthenticateProfile()
-            console.log(res)
-            
-            if (!res.data) {
-              router.push('/auth/login')
-              return
-            }
-    
-            setUser(res.data)
-    
-            if (!res.data.tokenAccount || res.data.tokenAccount.balance <= 1) {
-               setShowInsufficientTokenPopup(true)
-            }
-          } catch (err) {
-            console.log(err)
-            router.push('/auth/login')
-          } finally {
-            setLoading(false)
-          }
+  const { user, setUser } = useAuth()
+  const [loading, setLoading] = useState(true)
+  const [showInsufficientTokenPopup, setShowInsufficientTokenPopup] = useState(false)
+  const router = useRouter()
+  useEffect(() => {
+    const checkUserAccess = async () => {
+      try {
+        const res = await AuthenticateProfile()
+        console.log(res)
+
+        if (!res.data) {
+          router.push('/auth/login')
+          return
         }
-    
-        checkUserAccess()
-      }, [])
-    
-    
-    
-      if (loading) {
-        return (
-          <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
-            <div className="text-center">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-indigo-600 to-blue-500 rounded-full mb-4 animate-pulse">
-                <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-              </div>
-              <div className="text-xl font-semibold bg-gradient-to-r from-indigo-600 to-blue-500 bg-clip-text text-transparent">
-                Verifying Access...
-              </div>
-            </div>
-          </div>
-        )
+
+        setUser(res.data)
+
+        if (!res.data.tokenAccount || res.data.tokenAccount.balance <= 1) {
+          setShowInsufficientTokenPopup(true)
+        }
+      } catch (err) {
+        console.log(err)
+        router.push('/auth/login')
+      } finally {
+        setLoading(false)
       }
+    }
+
+    checkUserAccess()
+  }, [])
+
+
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-indigo-600 to-blue-500 rounded-full mb-4 animate-pulse">
+            <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+          </div>
+          <div className="text-xl font-semibold bg-gradient-to-r from-indigo-600 to-blue-500 bg-clip-text text-transparent">
+            Verifying Access...
+          </div>
+        </div>
+      </div>
+    )
+  }
   return (
-   <div className='min-h-screen mx-auto py-3 ' >
-<HowWeGenerate></HowWeGenerate>
-      <ResearchSearchForm></ResearchSearchForm> 
-   {showInsufficientTokenPopup && (
+    <div className='min-h-screen mx-auto py-3 ' >
+      <HowWeGenerate></HowWeGenerate>
+      <ResearchSearchForm></ResearchSearchForm>
+      {showInsufficientTokenPopup && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-xl max-w-md w-full text-center overflow-hidden">
             <div className="bg-gradient-to-r from-red-500 to-pink-500 p-6">
@@ -88,10 +88,10 @@ const page = () => {
           </div>
         </div>
       )}
-    
 
 
-    </div>  )
+
+    </div>)
 }
 
 export default page

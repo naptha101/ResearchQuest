@@ -13,7 +13,7 @@ const LoadingSpinner = ({ size = 'md', className = '' }) => {
     md: 'w-6 h-6',
     lg: 'w-8 h-8'
   }
-  
+
   return (
     <div className={`${sizeClasses[size]} ${className}`}>
       <div className="animate-spin rounded-full border-2 border-gray-300 border-t-blue-600 w-full h-full"></div>
@@ -40,7 +40,7 @@ const LoadingCard = ({ icon: Icon, title, subtitle, isLoading, hasError, childre
             <p className="text-sm text-gray-600">{subtitle}</p>
           </div>
         </div>
-        
+
         <div className="min-h-[100px] transition-all duration-300">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-8">
@@ -66,10 +66,10 @@ const LoadingCard = ({ icon: Icon, title, subtitle, isLoading, hasError, childre
 
 const ProgressBar = ({ completed, total }) => {
   const percentage = (completed / total) * 100
-  
+
   return (
     <div className="w-full bg-gray-200 rounded-full h-2.5 mb-6 overflow-hidden">
-      <div 
+      <div
         className="bg-gradient-to-r from-blue-500 to-purple-600 h-full rounded-full transition-all duration-700 ease-out"
         style={{ width: `${percentage}%` }}
       ></div>
@@ -79,17 +79,17 @@ const ProgressBar = ({ completed, total }) => {
 
 const StatusBadge = ({ status, count }) => {
   const getStatusColor = (status) => {
-    switch(status) {
+    switch (status) {
       case 'completed': return 'bg-green-100 text-green-800'
       case 'loading': return 'bg-blue-100 text-blue-800'
       case 'error': return 'bg-red-100 text-red-800'
       default: return 'bg-gray-100 text-gray-800'
     }
   }
-  
+
   return (
     <span className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${getStatusColor(status)} flex items-center gap-1`}>
-      {status.charAt(0).toUpperCase() + status.slice(1)} 
+      {status.charAt(0).toUpperCase() + status.slice(1)}
       <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-white bg-opacity-80 text-xs">
         {count}
       </span>
@@ -122,14 +122,14 @@ const PageComponent = () => {
   const [citationLoading, setCitationLoading] = useState(false)
   const [reviewLoading, setReviewLoading] = useState(true)
   const [summaryLoading, setSummaryLoading] = useState(false)
-  
+
   const [titleError, setTitleError] = useState(false)
   const [contextError, setContextError] = useState(false)
   const [citationError, setCitationError] = useState(false)
   const [reviewError, setReviewError] = useState(false)
-  
+
   const params = useSearchParams()
-  
+
   useEffect(() => {
     handleTitleGeneration()
     handleContextGeneration()
@@ -139,7 +139,7 @@ const PageComponent = () => {
   useEffect(() => {
     handleReviewGeneration()
   }, [citation])
-  
+
   const handleTitleGeneration = async () => {
     setTitleLoading(true)
     setTitleError(false)
@@ -147,7 +147,7 @@ const PageComponent = () => {
       const paper = params.get("paper")
       if (paper) {
         const response = await generateTitle(paper)
-        
+
         if (response.results) {
           setTitles(response.results.title)
         } else {
@@ -163,7 +163,7 @@ const PageComponent = () => {
       setTitleLoading(false)
     }
   }
-  
+
   const handleContextGeneration = async () => {
     setContextLoading(true)
     setContextError(false)
@@ -208,7 +208,7 @@ const PageComponent = () => {
       setReviewLoading(false)
     }
   }
-  
+
   const handleCitationGeneration = async () => {
     setCitationLoading(true)
     setCitationError(false)
@@ -231,7 +231,7 @@ const PageComponent = () => {
       setCitationLoading(false)
     }
   }
-  
+
   const getCompletedCount = () => {
     let count = 0
     if (title && !titleLoading && !titleError) count++
@@ -241,7 +241,7 @@ const PageComponent = () => {
     if (summary && !summaryLoading) count++
     return count
   }
-  
+
   const getLoadingCount = () => {
     let count = 0
     if (titleLoading) count++
@@ -251,7 +251,7 @@ const PageComponent = () => {
     if (summaryLoading) count++
     return count
   }
-  
+
   const getErrorCount = () => {
     let count = 0
     if (titleError) count++
@@ -283,11 +283,11 @@ const PageComponent = () => {
     }
   }
 
-  const handleDownload=async()=>{
-    try{
-      generateDocxFromResult(title,authors,result, citation)
+  const handleDownload = async () => {
+    try {
+      generateDocxFromResult(title, authors, result, citation)
     }
-    catch(err){
+    catch (err) {
       console.log(err)
       toast.error("Error in Downloading docx file.")
     }
@@ -305,7 +305,7 @@ const PageComponent = () => {
             Generating comprehensive analysis including title, context, and citations for your research paper
           </p>
         </div>
-        
+
         {/* Progress Section */}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-100">
           <div className="flex flex-col sm:flex-row justify-between items-center mb-4 gap-4">
@@ -321,7 +321,7 @@ const PageComponent = () => {
           </div>
           <ProgressBar completed={getCompletedCount()} total={5} />
         </div>
-        
+
         {/* Content Cards */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {/* Title Card */}
@@ -341,106 +341,109 @@ const PageComponent = () => {
               </div>
             )}
           </LoadingCard>
-        
+
         </div>
-        
+
         {/* Review Section - Full Width */}
         <div className="mt-8">
           <LoadingCard
             icon={BookAIcon}
             title="Literature Review"
             subtitle="Comprehensive analysis of the paper"
-            isLoading={reviewLoading||titleLoading||citationLoading}
+            isLoading={reviewLoading || titleLoading || citationLoading}
             hasError={false}
           >
-             {result && (
-                     <div className="w-full bg-white px-4 py-6 font-serif text-gray-800 leading-relaxed tracking-wide">
-            <article className="max-w-none space-y-8">
-              <header className="text-center">
-                <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900 font-sans mb-3">
-                  {title}
-                </h1>
-                {authors.length > 0 && <p className="text-base sm:text-lg text-gray-500 italic">{authors.join(', ')}</p>}
-              </header>
-          
-              <Section title="Key Findings">
-                {result.Findings}
-              </Section>
-          
-              <Section title="Methodology">
-                {result.Methodology}
-              </Section>
-          
-              <Section title="Data Source of Methodology">
-                {result.DataSourceOfMethodology}
-              </Section>
-          
-              <Section title="Novelty of the Study">
-                {result.Novelty}
-              </Section>
-          
-              <Section title="Relationship with Study">
-                {result.RelationshipWithStudy}
-              </Section>
-          
-              {result.ResearchGaps && result.ResearchGaps.length > 0 && (
-                <Section title="Research Gaps">
-                  <ul className="list-disc pl-6 space-y-2 marker:text-orange-500">
-                    {result.ResearchGaps.map((item, idx) => (
-                      <li key={idx}>{item.gap}</li>
-                    ))}
-                  </ul>
-                </Section>
-              )}
-          
-              {result.StudyObjectives && result.StudyObjectives.length > 0 && (
-                <Section title="Study Objectives">
-                  <ol className="list-decimal pl-6 space-y-2 marker:text-sky-600">
-                    {result.StudyObjectives.map((item, idx) => (
-                      <li key={idx}>{item.objective}</li>
-                    ))}
-                  </ol>
-                </Section>
-              )}
-          
-              <Section title="Statistical Tools">
-                {result.StatisticalTools}
-              </Section>
-          
-              <Section title="Research Summary">
-                {result.ResearchSummary}
-              </Section>
-              
-              {citation && (
-                <Section title="Citation">
-                  {citation}
-                </Section>
-              )}
-            </article>
+            {result && (
+              <div className="w-full bg-white px-4 py-6 font-serif text-gray-800 leading-relaxed tracking-wide">
+                <article className="max-w-none space-y-8">
+                  <header className="text-center">
+                    <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900 font-sans mb-3">
+                      {title}
+                    </h1>
+                    {authors.length > 0 && <p className="text-base sm:text-lg text-gray-500 italic">{authors.join(', ')}</p>}
+                  </header>
 
-          <button
-      onClick={handleDownload}
-      className="bg-gradient-to-r mt-3 from-blue-500 to-purple-600 text-white hover:shadow-lg flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-300"
-    >
-      Download .docx <Download className="w-4 h-4"></Download>
-    </button>
+                  <Section title="Key Findings">
+                    {result.Findings}
+                  </Section>
 
-          </div>
-                    )}
+                  <Section title="Methodology">
+                    {result.Methodology}
+                  </Section>
+
+                  <Section title="Data Source of Methodology">
+                    {result.DataSourceOfMethodology}
+                  </Section>
+
+                  <Section title="Novelty of the Study">
+                    {result.Novelty}
+                  </Section>
+
+                  <Section title="Relationship with Study">
+                    {result.RelationshipWithStudy}
+                  </Section>
+
+                  {result.ResearchGaps && result.ResearchGaps.length > 0 && (
+                    <Section title="Research Gaps">
+                      <ul className="list-disc pl-6 space-y-2 marker:text-orange-500">
+                        {result.ResearchGaps.map((item, idx) => (
+                          <li key={idx}>{item.gap}</li>
+                        ))}
+                      </ul>
+                    </Section>
+                  )}
+
+                  {result.StudyObjectives && result.StudyObjectives.length > 0 && (
+                    <Section title="Study Objectives">
+                      <ol className="list-decimal pl-6 space-y-2 marker:text-sky-600">
+                        {result.StudyObjectives.map((item, idx) => (
+                          <li key={idx}>{item.objective}</li>
+                        ))}
+                      </ol>
+                    </Section>
+                  )}
+
+                  <Section title="Statistical Tools">
+                    {result.StatisticalTools}
+                  </Section>
+
+                  <Section title="Research Summary">
+                    {result.ResearchSummary}
+                  </Section>
+
+                  {citation && (
+                    <Section title="Citation">
+                      {/* {citation} */}
+                      {/* {
+                    citation.indexOf("https://researchquestupload.s3.amazonaws.com/")
+                  } */}
+                      {citation.toString().includes("https://researchquestupload.s3.amazonaws.com/") ? citation.substring(0, citation.indexOf("https://researchquestupload.s3.amazonaws.com/")) : citation}
+                    </Section>
+                  )}
+                </article>
+
+                <button
+                  onClick={handleDownload}
+                  className="bg-gradient-to-r mt-3 from-blue-500 to-purple-600 text-white hover:shadow-lg flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-300"
+                >
+                  Download .docx <Download className="w-4 h-4"></Download>
+                </button>
+
+              </div>
+            )}
           </LoadingCard>
         </div>
-        
+
         {/* Summary Button and Result */}
         {result && !reviewLoading && !reviewError && (
           <div className="mt-6">
-            <button 
+            <button
               onClick={summarizePaper}
               disabled={summaryLoading}
-              className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
-                summaryLoading 
-                  ? 'bg-gray-200 text-gray-600 cursor-not-allowed' 
+              className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-300 ${summaryLoading
+                  ? 'bg-gray-200 text-gray-600 cursor-not-allowed'
                   : 'bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:shadow-lg'
-              }`}
+                }`}
             >
               {summaryLoading ? (
                 <>
@@ -454,20 +457,20 @@ const PageComponent = () => {
                 </>
               )}
             </button>
-            
+
             {summary && (
               <div className="mt-6 bg-white text-gray-800 px-6 py-6 rounded-lg shadow-sm border border-gray-200">
                 <div className="flex items-center gap-2 mb-4">
                   <span className="w-2 h-2 rounded-full bg-blue-500"></span>
                   <h3 className="text-lg font-semibold text-gray-800">Paper Summary</h3>
                 </div>
-                
+
                 <div className="space-y-6">
                   <div>
                     <h4 className="text-sm font-medium text-gray-500 mb-1">Summary</h4>
                     <p className="text-base font-medium text-gray-700">{summary.cite}</p>
                   </div>
-                  
+
                   <div>
                     <p className="text-gray-800 whitespace-pre-line">{summary.summary}</p>
                   </div>
@@ -476,7 +479,7 @@ const PageComponent = () => {
             )}
           </div>
         )}
-        
+
         {/* Completion Message */}
         {getCompletedCount() >= 4 && (
           <div className="mt-8 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-6 border border-green-200 animate-fade-in">
@@ -491,9 +494,9 @@ const PageComponent = () => {
             </p>
           </div>
         )}
-        
+
         {/* Error Message */}
-        { (contextError||titleError||reviewError)&&(!contextLoading&&!titleLoading&&!reviewLoading) && (
+        {(contextError || titleError || reviewError) && (!contextLoading && !titleLoading && !reviewLoading) && (
           <div className="mt-8 bg-red-50 rounded-xl p-6 border border-red-200 animate-fade-in">
             <div className="flex items-center gap-3 mb-4">
               <div className="p-2 rounded-full bg-red-100">
@@ -504,7 +507,7 @@ const PageComponent = () => {
             <p className="text-red-700 mb-4">
               {getErrorCount()} item(s) failed to generate. You can try refreshing the page to retry.
             </p>
-            <button 
+            <button
               onClick={() => window.location.reload()}
               className="flex items-center gap-2 bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200"
             >
@@ -519,12 +522,12 @@ const PageComponent = () => {
 }
 
 
-export default function pageWrapper(){
+export default function pageWrapper() {
 
   return (
-<Suspense fallback={<LoadingSpinner></LoadingSpinner>}>
-  <PageComponent></PageComponent>
-</Suspense>
+    <Suspense fallback={<LoadingSpinner></LoadingSpinner>}>
+      <PageComponent></PageComponent>
+    </Suspense>
 
 
   )

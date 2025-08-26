@@ -5,10 +5,11 @@ import axios from "axios";
 export const getTitle=async (data)=>
     {
         try{
-            console.log(data)
+            
             const response=await axios.post(process.env.NEXT_PUBLIC_OPEN_API+"direct_title_generator/title_gen",data)
-        
+        console.log(response.data)
         return response.data
+        
         }
         catch(err){
             console.log(err);
@@ -18,11 +19,12 @@ export const getTitle=async (data)=>
     }
  export const getLiteraturPosts = async (data) =>{
     try{
-       // console.log(data)
+    //    console.log(data)
 
         const response=await axios.post(process.env.NEXT_PUBLIC_API+'researchquest/research-title-generation',data,{
             withCredentials:true
         })
+        console.log(response)
         return response.data.data.data;
     }
     catch(err){
@@ -53,7 +55,7 @@ const response=await axios.post(process.env.NEXT_PUBLIC_API+"researchquest/resea
     description:"Research Title Generation TEST",
   id:id
 },{withCredentials:true})
-//console.log(response)
+console.log(response)
 return response.data.data
 
 }

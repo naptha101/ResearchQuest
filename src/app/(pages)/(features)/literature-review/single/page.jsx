@@ -12,7 +12,7 @@ export default function FileUploadComponent() {
   const [uploadMode, setUploadMode] = useState('single'); // 'single' or 'multiple'
   const [isProcessing, setIsProcessing] = useState(false);
   const fileInputRef = useRef(null);
-  const {user}=useAuth()
+  const { user } = useAuth()
 
   const getFileIcon = (fileType) => {
     if (fileType.startsWith('image/')) return Image;
@@ -33,7 +33,7 @@ export default function FileUploadComponent() {
 
   const handleFileSelect = useCallback((files) => {
     const fileArray = Array.from(files);
-    
+
     if (uploadMode === 'single') {
       setSelectedFiles(fileArray.slice(0, 1));
     } else {
@@ -73,47 +73,47 @@ export default function FileUploadComponent() {
     setSelectedFiles([]);
   };
 
-const router=useRouter()
-const handleProceed = async () => {
-  if (!selectedFiles || selectedFiles.length === 0) return;
+  const router = useRouter()
+  const handleProceed = async () => {
+    if (!selectedFiles || selectedFiles.length === 0) return;
 
-  setIsProcessing(true);
+    setIsProcessing(true);
 
-  try {
-    const formData = new FormData();
+    try {
+      const formData = new FormData();
 
-    // Append each selected file (if multiple)
-    for (let i = 0; i < selectedFiles.length; i++) {
-      formData.append("file", selectedFiles[i]);
-    }
+      // Append each selected file (if multiple)
+      for (let i = 0; i < selectedFiles.length; i++) {
+        formData.append("file", selectedFiles[i]);
+      }
 
-    formData.append("user_id", user._id);
-    formData.append("bucket_name", process.env.NEXT_PUBLIC_BUCKET);
-    formData.append("aws_access_key_id", process.env.NEXT_PUBLIC_AWS_ID);
-    formData.append("aws_secret_access_key", process.env.NEXT_PUBLIC_ACCESS_KEY);
-    formData.append("s3_file_name", "New file " + Math.random());
+      formData.append("user_id", user._id);
+      formData.append("bucket_name", process.env.NEXT_PUBLIC_BUCKET);
+      formData.append("aws_access_key_id", process.env.NEXT_PUBLIC_AWS_ID);
+      formData.append("aws_secret_access_key", process.env.NEXT_PUBLIC_ACCESS_KEY);
+      formData.append("s3_file_name", "New file " + Math.random());
 
-    const response = await uploadFile(formData);
+      const response = await uploadFile(formData);
 
-    if(response.s3_url){
+      if (response.s3_url) {
         toast.success("Your paper uploaded succesfully");
-            const params = new URLSearchParams();
+        const params = new URLSearchParams();
 
-    params.set('paper', response.s3_url);
-   
-    const newUrl = `${window.location.pathname}/review?${params.toString()}`;
-    router.push(newUrl)
-    }else{
+        params.set('paper', response.s3_url);
+
+        const newUrl = `${window.location.pathname}/review?${params.toString()}`;
+        router.push(newUrl)
+      } else {
         toast.error("Error occured while uploading File")
+      }
+      //console.log(response);
+    } catch (err) {
+      console.error("Upload failed:", err);
     }
-    //console.log(response);
-  } catch (err) {
-    console.error("Upload failed:", err);
-  }
 
-  setIsProcessing(false);
-  alert(`Processing ${selectedFiles.length} file(s)...`);
-};
+    setIsProcessing(false);
+    alert(`Processing ${selectedFiles.length} file(s)...`);
+  };
 
 
   const openFileDialog = () => {
@@ -182,8 +182,8 @@ const handleProceed = async () => {
           <div
             className={`
               relative border-2 border-dashed rounded-2xl p-12 transition-all duration-300 cursor-pointer
-              ${isDragging 
-                ? 'border-blue-500 bg-blue-50 scale-105' 
+              ${isDragging
+                ? 'border-blue-500 bg-blue-50 scale-105'
                 : 'border-slate-300 hover:border-blue-400 hover:bg-blue-50/50'
               }
             `}
@@ -196,8 +196,8 @@ const handleProceed = async () => {
             <div className="text-center">
               <div className={`
                 w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center transition-all duration-300
-                ${isDragging 
-                  ? 'bg-gradient-to-r from-blue-500 to-indigo-600 scale-110' 
+                ${isDragging
+                  ? 'bg-gradient-to-r from-blue-500 to-indigo-600 scale-110'
                   : 'bg-gradient-to-r from-slate-400 to-slate-500 hover:from-blue-500 hover:to-indigo-600'
                 }
               `}>
@@ -253,7 +253,7 @@ const handleProceed = async () => {
                     <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center flex-shrink-0">
                       <FileIconComponent className="w-6 h-6 text-white" />
                     </div>
-                    
+
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-slate-800 truncate">
                         {file.name}
@@ -295,14 +295,14 @@ const handleProceed = async () => {
                 <Plus className="w-5 h-5" />
                 Add More Files
               </button>
-              
+
               <button
                 onClick={handleProceed}
                 disabled={isProcessing}
                 className={`
                   inline-flex items-center gap-3 px-8 py-4 font-bold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 active:scale-95
-                  ${isProcessing 
-                    ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white cursor-not-allowed' 
+                  ${isProcessing
+                    ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white cursor-not-allowed'
                     : 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:from-blue-600 hover:to-indigo-700'
                   }
                 `}

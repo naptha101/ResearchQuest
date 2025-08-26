@@ -7,14 +7,14 @@ import AdvanceAnalysis from './analysis/AdvanceAnalysis';
 import { ArrowBigDown, ArrowBigLeft, ArrowBigRight } from 'lucide-react';
 import { getPreviousResearch } from '@/app/Services/Literation-Review';
 
-const ResearchShowcase = ({ data,setData,isAdvanced }) => {
+const ResearchShowcase = ({ data, setData, isAdvanced }) => {
   const [activePaper, setActivePaper] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortConfig, setSortConfig] = useState({ key: 'recency_score', direction: 'asc' });
   const [expandedKeywords, setExpandedKeywords] = useState(false);
   const [selectedPapers, setSelectedPapers] = useState([]);
-  
-  const router=useRouter()
+
+  const router = useRouter()
   const togglePaper = (id) => {
     setActivePaper(activePaper === id ? null : id);
   };
@@ -23,31 +23,32 @@ const ResearchShowcase = ({ data,setData,isAdvanced }) => {
     setSearchTerm(e.target.value);
   };
 
-  const handleHistory=async(id)=>{
-    try{
-  
-      const response = await getPreviousResearch(id);
-    //console.log(response)
-    if(response.data.level2.input.papers){
-  //     response.data.level2.input.papers.map((ppr)=>{
-    
-  // setSelectedPapers(response.data.level2.input.papers)
+  const handleHistory = async (id) => {
+    try {
 
-  //   })
-   setSelectedPapers(response.data.level2.input.papers)
-  }
+      const response = await getPreviousResearch(id);
+      //console.log(response)
+      if (response.data.level2.input.papers) {
+        //     response.data.level2.input.papers.map((ppr)=>{
+
+        // setSelectedPapers(response.data.level2.input.papers)
+
+        //   })
+        setSelectedPapers(response.data.level2.input.papers)
+      }
     }
-    catch(err){
+    catch (err) {
       console.log(err)
       toast.error("Error fetching old Research History.")
     }
   }
 
-const params=useSearchParams();
-  useEffect(()=>{
-    const id=params.get("id");
-if(id)handleHistory(id)
-  },[])
+  const params = useSearchParams();
+  
+  useEffect(() => {
+    const id = params.get("id");
+    if (id) handleHistory(id)
+  }, [])
   const requestSort = (key) => {
     let direction = 'asc';
     if (sortConfig.key === key && sortConfig.direction === 'asc') {
@@ -81,8 +82,8 @@ if(id)handleHistory(id)
     return sortConfig.direction === 'asc' ? '↑' : '↓';
   };
 
-  const visibleKeywords = expandedKeywords 
-    ? data.keywords_used 
+  const visibleKeywords = expandedKeywords
+    ? data.keywords_used
     : data.keywords_used.slice(0, 3);
 
   // Handle paper selection
@@ -100,9 +101,9 @@ if(id)handleHistory(id)
       return prev;
     });
   };
-  const handleNext=()=>{
+  const handleNext = () => {
     if (selectedPapers.length === 0) return;
-    
+
     router.push('/title-generation/advance/#advance')
   }
 
@@ -118,19 +119,19 @@ if(id)handleHistory(id)
   const isPaperSelected = (index) => {
     return selectedPapers.some(p => p.index === index);
   };
-const [openSelected,setSelected]=useState(true);
+  const [openSelected, setSelected] = useState(true);
 
   return (
     <div className="min-h-screen mt-3 rounded-xl bg-gradient-to-br from-indigo-50 to-blue-50 p-6 relative">
       {/* Floating selected papers container */}
       {selectedPapers.length > 0 && (
-        <div className={"fixed  top-1/2 transform -translate-y-1/2 w-64 bg-white rounded-xl shadow-lg p-4 z-10 max-h-[70vh] overflow-y-auto"+(openSelected?" right-6":" -right-50")}>
+        <div className={"fixed  top-1/2 transform -translate-y-1/2 w-64 bg-white rounded-xl shadow-lg p-4 z-10 max-h-[70vh] overflow-y-auto" + (openSelected ? " right-6" : " -right-50")}>
           <h3 className="font-semibold  text-indigo-800 mb-3 border-b pb-2">
-             <span className='cursor-pointer'>{!openSelected?<ArrowBigLeft onClick={()=>{setSelected(!openSelected)}} height={40} width={40}></ArrowBigLeft>:<ArrowBigRight onClick={()=>{setSelected(!openSelected)}} height={40} width={40}></ArrowBigRight>}</span>   Selected Papers ({selectedPapers.length}/3)
+            <span className='cursor-pointer'>{!openSelected ? <ArrowBigLeft onClick={() => { setSelected(!openSelected) }} height={40} width={40}></ArrowBigLeft> : <ArrowBigRight onClick={() => { setSelected(!openSelected) }} height={40} width={40}></ArrowBigRight>}</span>   Selected Papers ({selectedPapers.length}/3)
           </h3>
           <ul className="space-y-2">
             {selectedPapers.map((paper) => (
-              <li 
+              <li
                 key={paper.index}
                 className="p-2 hover:bg-indigo-50 rounded-lg cursor-pointer transition-colors"
                 onClick={() => scrollToPaper(paper.index)}
@@ -149,8 +150,8 @@ const [openSelected,setSelected]=useState(true);
           {selectedPapers.length === 3 && (
             <p className="text-xs text-gray-500 mt-2 italic">Maximum 3 papers selected</p>
           )}
-           {selectedPapers.length >0 && (
-            <a  href='#advance' className="text-xs text-white bg-blue-500 p-2 mt-2 italic">Next</a>
+          {selectedPapers.length > 0 && (
+            <a href='#advance' className="text-xs text-white bg-blue-500 p-2 mt-2 italic">Next</a>
           )}
         </div>
       )}
@@ -160,7 +161,7 @@ const [openSelected,setSelected]=useState(true);
         <div className="mb-8 text-center">
           <h1 className="text-4xl font-bold text-indigo-900 mb-2">Research Paper Explorer</h1>
           <p className="text-lg text-indigo-700">
-            Exploring {data.papers.length} papers 
+            Exploring {data.papers.length} papers
           </p>
         </div>
 
@@ -171,7 +172,7 @@ const [openSelected,setSelected]=useState(true);
               <h3 className="text-sm font-medium text-gray-500 mb-1">Keywords Used</h3>
               <div className="flex flex-wrap gap-2">
                 {visibleKeywords.map((keyword, i) => (
-                  <span 
+                  <span
                     key={i}
                     className="px-3 py-1 bg-indigo-100 text-indigo-800 text-sm rounded-full"
                   >
@@ -179,7 +180,7 @@ const [openSelected,setSelected]=useState(true);
                   </span>
                 ))}
                 {data.keywords_used.length > 3 && (
-                  <button 
+                  <button
                     onClick={() => setExpandedKeywords(!expandedKeywords)}
                     className="text-indigo-600 text-sm flex items-center"
                   >
@@ -241,11 +242,10 @@ const [openSelected,setSelected]=useState(true);
                 {/* Selection checkbox */}
                 <button
                   onClick={() => togglePaperSelection({ ...paper, index })}
-                  className={`absolute top-4 right-4 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
-                    isPaperSelected(index) 
-                      ? 'bg-indigo-600 border-indigo-600 text-white' 
+                  className={`absolute top-4 right-4 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${isPaperSelected(index)
+                      ? 'bg-indigo-600 border-indigo-600 text-white'
                       : 'bg-white border-gray-300 hover:border-indigo-400'
-                  }`}
+                    }`}
                   title={isPaperSelected(index) ? "Remove from selection" : "Add to selection"}
                   disabled={selectedPapers.length >= 3 && !isPaperSelected(index)}
                 >
@@ -254,7 +254,7 @@ const [openSelected,setSelected]=useState(true);
                   )}
                 </button>
 
-                <div 
+                <div
                   className="p-6 cursor-pointer hover:bg-indigo-50 transition-colors"
                   onClick={() => togglePaper(index)}
                 >
@@ -294,14 +294,14 @@ const [openSelected,setSelected]=useState(true);
                     >
                       <div className="px-6 pb-6 pt-2 border-t border-gray-100">
                         <p className="text-gray-700 mb-4">{paper.summary}</p>
-                        
+
                         <div className="flex flex-wrap justify-between items-center gap-4">
                           <div className="flex items-center gap-2 text-sm text-gray-500">
                             <span>Published: {new Date(paper.published).toLocaleDateString()}</span>
                             <span>•</span>
                             <span className="text-green-600">{paper.pdf_availability}</span>
                           </div>
-                          
+
                           <div className="flex gap-3">
                             <a
                               href={paper.link}
@@ -345,13 +345,13 @@ const [openSelected,setSelected]=useState(true);
         </div> */}
       </div>
 
-{
-selectedPapers.length>0&&
-<div  id="advance">
-{isAdvanced&&<AdvanceAnalysis papers={selectedPapers} keyword={null}  ></AdvanceAnalysis>}
-{!isAdvanced&&<AdvanceAnalysis papers={selectedPapers} keyword={visibleKeywords}></AdvanceAnalysis>}
-</div>
-}
+      {
+        selectedPapers.length > 0 &&
+        <div id="advance">
+          {isAdvanced && <AdvanceAnalysis papers={selectedPapers} keyword={null}  ></AdvanceAnalysis>}
+          {!isAdvanced && <AdvanceAnalysis papers={selectedPapers} keyword={visibleKeywords}></AdvanceAnalysis>}
+        </div>
+      }
 
     </div>
   );

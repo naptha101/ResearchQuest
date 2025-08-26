@@ -8,7 +8,7 @@ import CTA from "./Component/home/CTA";
 import AboutUs from "./Component/home/AboutUs";
 
 export default function Home() {
-  
+
 
 
 
@@ -24,15 +24,15 @@ export default function Home() {
       </Head>
 
       <div className="min-h-screen text-black bg-orange-50">
-      
-    <Hero></Hero>
-    <AboutUs></AboutUs>
-    <Partners></Partners>
-    {/* <Features></Features>  */}
-  
+
+        <Hero></Hero>
+        <AboutUs></AboutUs>
+        <Partners></Partners>
+        {/* <Features></Features>  */}
+
         <ResearchFeatures></ResearchFeatures>
-          <CTA></CTA>
-          <Features></Features>
+        <CTA></CTA>
+        <Features></Features>
       </div>
     </>
   );

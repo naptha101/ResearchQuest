@@ -6,24 +6,24 @@ import { Loader2 } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
 
-const AdvanceAnalysis = ({ papers,keyword }) => {
+const AdvanceAnalysis = ({ papers, keyword }) => {
 
-  const [researchPapers,setReseachPapers]=useState(null)
-  const [loading,setLoading]=useState(false)
-  const params=useSearchParams();
+  const [researchPapers, setReseachPapers] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const params = useSearchParams();
 
   const HandlePaperAnalysis = async () => {
     try {
       setLoading(true)
 
- const id=params.get("id")
+      const id = params.get("id")
 
-      const response = await paperReviewAnalysis(papers,id);
-   //   console.log(response)
-      if(response.output.papers){
-      setReseachPapers(response.output.papers)
-      setLoading(false)
-      }else{
+      const response = await paperReviewAnalysis(papers, id);
+      //   console.log(response)
+      if (response.output.papers) {
+        setReseachPapers(response.output.papers)
+        setLoading(false)
+      } else {
         toast.error("No papers found")
         setLoading(false)
       }
@@ -33,25 +33,25 @@ const AdvanceAnalysis = ({ papers,keyword }) => {
       setLoading(false);
     }
   };
-  const handlePaperHistory=async()=>{
-    try{
-      const id=params.get("id");
-if(id){
-      const response =await getPreviousResearch(id)
- if(response.data.level2.output.papers)   {
-setReseachPapers(response.data.level2.output.papers)
- }
- 
-    }
+  const handlePaperHistory = async () => {
+    try {
+      const id = params.get("id");
+      if (id) {
+        const response = await getPreviousResearch(id)
+        if (response.data.level2.output.papers) {
+          setReseachPapers(response.data.level2.output.papers)
+        }
+
+      }
 
     }
-    catch(err){
+    catch (err) {
       toast.error("Can't fetch your previous Papers.")
     }
   }
-  useEffect(()=>{
-handlePaperHistory()
-  },[])
+  useEffect(() => {
+    handlePaperHistory()
+  }, [])
 
 
 
@@ -102,25 +102,25 @@ handlePaperHistory()
         ))}
       </div>
 
-      <button onClick={()=>{HandlePaperAnalysis()}} className='bg-gradient-to-r rounded-xl p-3 text-xl text-white shadow-xl hover:scale-105 cursor-pointer from-amber-400 to-orange-500'>
+      <button onClick={() => { HandlePaperAnalysis() }} className='bg-gradient-to-r rounded-xl p-3 text-xl text-white shadow-xl hover:scale-105 cursor-pointer from-amber-400 to-orange-500'>
         Paper Review Analysis
       </button>
 
-      {researchPapers&&researchPapers.length>0&&!loading&&<DetailedPaperShow papers={researchPapers} selectedPapers={papers} keywords={keyword}>
+      {researchPapers && researchPapers.length > 0 && !loading && <DetailedPaperShow papers={researchPapers} selectedPapers={papers} keywords={keyword}>
 
       </DetailedPaperShow>}
-     {loading && (
-          <div className="mt-16 flex flex-col items-center justify-center">
-            <div className="relative w-24 h-24 mb-6">
-              <div className="absolute inset-0 rounded-full border-4 border-blue-500 border-t-transparent animate-spin"></div>
-              <div className="absolute inset-4 rounded-full border-4 border-orange-500 border-t-transparent animate-spin animation-delay-200"></div>
-            </div>
-            <h3 className="text-xl font-semibold text-gray-800 mb-2">Gathering Research</h3>
-            <p className="text-gray-600 max-w-md text-center">
-              Our AI is scanning thousands of papers to find the most relevant research for you...
-            </p>
+      {loading && (
+        <div className="mt-16 flex flex-col items-center justify-center">
+          <div className="relative w-24 h-24 mb-6">
+            <div className="absolute inset-0 rounded-full border-4 border-blue-500 border-t-transparent animate-spin"></div>
+            <div className="absolute inset-4 rounded-full border-4 border-orange-500 border-t-transparent animate-spin animation-delay-200"></div>
           </div>
-        )}
+          <h3 className="text-xl font-semibold text-gray-800 mb-2">Gathering Research</h3>
+          <p className="text-gray-600 max-w-md text-center">
+            Our AI is scanning thousands of papers to find the most relevant research for you...
+          </p>
+        </div>
+      )}
 
     </div>
   );
